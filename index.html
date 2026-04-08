@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matteklubben - Lær om matte og gjør interaktive oppgaver</title>
+    <style>
+        /* Grunnleggende oppsett og fargepalett */
+        :root {
+            --bg-color: #0f0f13;
+            --text-color: #ffffff;
+            --accent-color: #4662ff; /* En sprek rød/rosa farge typisk for gaming */
+            --card-bg: #1c1c24;
+            --hover-color: #6ac8ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--text-color);
+        }
+
+        /* Navigasjonsmeny */
+        header {
+            background-color: rgba(15, 15, 19, 0.9);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #333;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a:hover {
+            color: var(--accent-color);
+            transition: color 0.3s ease;
+        }
+
+        /* Hero-seksjon */
+        .hero {
+            height: 60vh;
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(15,15,19,1)), url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop') center/cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 0 5%;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+        }
+
+        .btn {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 0.8rem 2rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background-color: var(--hover-color);
+        }
+
+        /* Spillseksjon og Spillkort */
+        .games-section {
+            padding: 4rem 5%;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            border-left: 5px solid var(--accent-color);
+            padding-left: 10px;
+        }
+
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .game-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+
+        .game-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .game-info {
+            padding: 1.5rem;
+        }
+
+        .game-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .play-link {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .play-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #0a0a0c;
+            padding: 3rem 5%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            border-top: 1px solid #333;
+            margin-top: 2rem;
+        }
+
+        .footer-col h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-col ul li a:hover {
+            color: var(--accent-color);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding: 1rem;
+            background-color: #000;
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        /* Responsivitet for mobil */
+        @media (max-width: 768px) {
+            nav ul {
+                display: none; /* Kan erstattes med en hamburger-meny for mobil */
+            }
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Matteklubb</div>
+
+    </header>
+
+    <section class="hero">
+        <h1>Matematikkfrukter</h1>
+        <p>Utforsk dette lærerike pedagogiske spillet for matematikk!</p>
+        <a href="fruitmerge.html" class="btn">Gjør oppgave</a>
+    </section>
+
+    <section class="games-section">
+        <h2 class="section-title">Pedagogiske mattespill for læring</h2>
+        <div class="game-grid">
+            
+            <article class="game-card">
+                <img src="https://images.unsplash.com/photo-1552820728-8b83bb6b773f?q=80&w=600&auto=format&fit=crop" alt="Spill 1" class="game-image">
+                <div class="game-info">
+                    <h3 class="game-title">Fruktspleis</h3>
+                    <a href="fruitmerge.html" class="play-link">Gå til spill &rarr;</a>
+                </div>
+            </article>
+
+            <article class="game-card">
+                <img src="https://images.unsplash.com/photo-1538481199005-c710c4e965fc?q=80&w=600&auto=format&fit=crop" alt="Spill 2" class="game-image">
+                <div class="game-info">
+                    <h3 class="game-title">Blokk Spreng</h3>
+                    <a href="blockblast.html" class="play-link">Gå til spill &rarr;</a>
+                </div>
+            </article>
+
+            <article class="game-card">
+                <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=600&auto=format&fit=crop" alt="Spill 3" class="game-image">
+                <div class="game-info">
+                    <h3 class="game-title">Pixel Racers</h3>
+                    <a href="#" class="play-link">Gå til spill &rarr;</a>
+                </div>
+            </article>
+
+            <article class="game-card">
+                <img src="https://images.unsplash.com/photo-1605901309584-818e25960b8f?q=80&w=600&auto=format&fit=crop" alt="Spill 4" class="game-image">
+                <div class="game-info">
+                    <h3 class="game-title">Zombie Survival</h3>
+                    <a href="#" class="play-link">Gå til spill &rarr;</a>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-col">
+            <h3>Om Oss</h3>
+            <p>Matteklubb er Norges raskest voksende portal for gratis nettspill. Vårt mål er å levere den beste underholdningen direkte til din skjerm.</p>
+        </div>
+        <div class="footer-col">
+            <h3>Kontaktinfo</h3>
+            <ul>
+                <li>E-post: support@matteklubb.no</li>
+                <li><a href="#">TikTok</a></li>
+                <li><a href="#">Instagram</a></li>
+
+            </ul>
+
+
+        </div>
+    </footer>
+    <div class="footer-bottom">
+        &copy; 2026 Matteklubb. Alle rettigheter reservert.
+    </div>
+
+</body>
+</html>

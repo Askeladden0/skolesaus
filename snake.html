@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Classic - Retro Gaming</title>
+    <style>
+        :root {
+            --bg-color: #1a1a1a;
+            --panel-bg: #2d2d2d;
+            --grid-line: #333;
+            --snake-head: #4CAF50;
+            --snake-body: #81C784;
+            --food-color: #e74c3c;
+            --text-color: #ecf0f1;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        nav {
+            width: 100%;
+            background-color: #000;
+            padding: 15px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-bottom: 2px solid var(--snake-head);
+        }
+
+        nav a { color: var(--text-color); text-decoration: none; font-weight: bold; }
+
+        .main-layout {
+            display: flex;
+            gap: 30px;
+            margin-top: 20px;
+            padding: 10px;
+        }
+
+        .ad-sidebar {
+            width: 160px;
+            height: 600px;
+            background: #252525;
+            border: 1px dashed #444;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .stats-bar {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            background: var(--panel-bg);
+            padding: 10px 20px;
+            border-radius: 8px 8px 0 0;
+            box-sizing: border-box;
+            font-weight: bold;
+        }
+
+        .canvas-wrapper {
+            position: relative;
+        }
+
+        canvas {
+            background-color: #000;
+            border: 5px solid var(--panel-bg);
+            display: block;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            text-align: center;
+        }
+
+        .overlay h2 { color: var(--snake-head); margin: 0; font-size: 2rem; }
+        .overlay p { margin: 10px 0; }
+
+        .description {
+            max-width: 500px;
+            margin-top: 20px;
+            background: var(--panel-bg);
+            padding: 20px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div style="font-size: 24px; font-weight: bold; color: var(--snake-head);">SNAKE</div>
+        <a href="#">Hjemmeside</a>
+    </nav>
+
+    <div class="main-layout">
+        <div class="ad-sidebar">Annonseplass</div>
+
+        <div class="game-container">
+            <div class="stats-bar">
+                <div>Poeng: <span id="score-val">0</span></div>
+                <div>Hastighet: <span id="speed-val">1</span></div>
+            </div>
+
+            <div class="canvas-wrapper">
+                <canvas id="snakeCanvas" width="400" height="400"></canvas>
+                
+                <div id="status-overlay" class="overlay">
+                    <h2 id="status-title">Klar?</h2>
+                    <p id="status-msg">Trykk piltastene eller WASD for å starte</p>
+                    <button id="restart-btn" style="display:none; padding:10px 20px; cursor:pointer; background:var(--snake-head); border:none; color:white; font-weight:bold; border-radius:5px;" onclick="resetGame()">Spill igjen</button>
+                </div>
+            </div>
+
+            <div class="description">
+                <h3>Kontroller:</h3>
+                <p>Bruk <strong>Piltastene</strong> eller <strong>W, A, S, D</strong> for å styre. <br>
+                Spillet starter med en gang du velger en retning!</p>
+            </div>
+        </div>
+
+        <div class="ad-sidebar">Annonseplass</div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('snakeCanvas');
+        const ctx = canvas.getContext('2d');
+        const statusOverlay = document.getElementById('status-overlay');
+        const statusTitle = document.getElementById('status-title');
+        const statusMsg = document.getElementById('status-msg');
+        const restartBtn = document.getElementById('restart-btn');
+
+        const gridSize = 20;
+        const tileCount = canvas.width / gridSize;
+
+        let snake, food, score, gameSpeed, gameInterval;
+        let dx, dy, nextDirection;
+        let gameRunning = false;
+        let gameStarted = false;
+
+        function resetGame() {
+            snake = [
+                { x: 10, y: 10 },
+                { x: 9, y: 10 },
+                { x: 8, y: 10 }
+            ];
+            food = { x: 15, y: 10 };
+            score = 0;
+            gameSpeed = 100;
+            dx = 0;
+            dy = 0;
+            nextDirection = { x: 0, y: 0 };
+            gameRunning = false;
+            gameStarted = false;
+
+            document.getElementById('score-val').innerText = "0";
+            document.getElementById('speed-val').innerText = "1";
+            statusTitle.innerText = "Klar?";
+            statusMsg.innerText = "Trykk piltastene eller WASD for å starte";
+            statusOverlay.style.display = 'flex';
+            restartBtn.style.display = 'none';
+
+            draw(); // Tegn startposisjon med rutenett
+        }
+
+        function createFood() {
+            food = {
+                x: Math.floor(Math.random() * tileCount),
+                y: Math.floor(Math.random() * tileCount)
+            };
+            // Sjekk at mat ikke havner inni slangen
+            for (let part of snake) {
+                if (part.x === food.x && part.y === food.y) createFood();
+            }
+        }
+
+        function update() {
+            if (!gameRunning) return;
+
+            dx = nextDirection.x;
+            dy = nextDirection.y;
+
+            const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+
+            // Kollisjon sjekk
+            if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= tileCount) return gameOver();
+            for (let part of snake) {
+                if (part.x === head.x && part.y === head.y) return gameOver();
+            }
+
+            snake.unshift(head);
+
+            if (head.x === food.x && head.y === food.y) {
+                score += 10;
+                document.getElementById('score-val').innerText = score;
+                if (score % 50 === 0 && gameSpeed > 50) {
+                    gameSpeed -= 5;
+                    clearInterval(gameInterval);
+                    gameInterval = setInterval(update, gameSpeed);
+                    document.getElementById('speed-val').innerText = Math.floor((100 - gameSpeed) / 5) + 1;
+                }
+                createFood();
+            } else {
+                snake.pop();
+            }
+
+            draw();
+        }
+
+        function draw() {
+            // Bakgrunn
+            ctx.fillStyle = "black";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Rutenett (Grid)
+            ctx.strokeStyle = "#1a1a1a";
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= canvas.width; i += gridSize) {
+                ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(canvas.width, i); ctx.stroke();
+            }
+
+            // Mat
+            ctx.fillStyle = varColor('--food-color');
+            ctx.fillRect(food.x * gridSize + 2, food.y * gridSize + 2, gridSize - 4, gridSize - 4);
+
+            // Slange
+            snake.forEach((part, index) => {
+                ctx.fillStyle = index === 0 ? varColor('--snake-head') : varColor('--snake-body');
+                // Legger til en liten "gap" mellom rutene for å se dem bedre
+                ctx.fillRect(part.x * gridSize + 1, part.y * gridSize + 1, gridSize - 2, gridSize - 2);
+            });
+        }
+
+        function varColor(name) {
+            return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+        }
+
+        function gameOver() {
+            gameRunning = false;
+            clearInterval(gameInterval);
+            statusTitle.innerText = "GAME OVER";
+            statusMsg.innerText = "Endelig poengsum: " + score;
+            restartBtn.style.display = 'block';
+            statusOverlay.style.display = 'flex';
+        }
+
+        window.addEventListener('keydown', e => {
+            const key = e.key.toLowerCase();
+            let newDir = null;
+
+            if (key === 'arrowup' || key === 'w') {
+                if (dy !== 1) newDir = { x: 0, y: -1 };
+            } else if (key === 'arrowdown' || key === 's') {
+                if (dy !== -1) newDir = { x: 0, y: 1 };
+            } else if (key === 'arrowleft' || key === 'a') {
+                if (dx !== 1) newDir = { x: -1, y: 0 };
+            } else if (key === 'arrowright' || key === 'd') {
+                if (dx !== -1) newDir = { x: 1, y: 0 };
+            }
+
+            if (newDir) {
+                nextDirection = newDir;
+                // Start spillet ved første trykk
+                if (!gameStarted) {
+                    gameStarted = true;
+                    gameRunning = true;
+                    statusOverlay.style.display = 'none';
+                    gameInterval = setInterval(update, gameSpeed);
+                }
+            }
+        });
+
+        resetGame();
+    </script>
+</body>
+</html>
