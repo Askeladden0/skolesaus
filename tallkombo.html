@@ -207,11 +207,11 @@
 
     <nav>
         <div style="font-size: 24px; font-weight: bold;">2048</div>
-        <a href="#">Hjemmeside</a>
+        <a href="index.html">Hjemmeside</a>
     </nav>
 
     <div class="main-container">
-        <div class="ad-space">Annonse (160x600)</div>
+        
 
         <div class="game-wrapper">
             <div class="header">
@@ -242,10 +242,16 @@
             
         </div>
 
-        <div class="ad-space">Annonse (160x600)</div>
+        
     </div>
-
+        
+        
+<script src="skolesaus-tracking.js"></script>
+<script src="cookie-modal.js"></script>
+<script src="nav.js"></script>
     <script>
+
+        
         let board;
         let score = 0;
         let best = localStorage.getItem('2048-best') || 0;
@@ -440,6 +446,7 @@ function slideTrack(row, lineIdx, reversed, isRow, mergedCells) {
         });
 
         initGame();
+        
     </script>
 </body>
 </html>

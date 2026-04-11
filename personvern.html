@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personvern & cookies – Skolesaus</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){ dataLayer.push(arguments); }
+        gtag('consent', 'default', { 'ad_storage': 'denied', 'analytics_storage': 'denied' });
+    </script>
+    <style>
+        :root {
+            --bg: #171925;
+            --surface: #1a1d2e;
+            --surface2: #2e3047;
+            --accent: #43d4b2;
+            --text: #d4d4d4;
+            --muted: #888;
+            --border: #2a2a2a;
+            --font-body: 'Lato', Arial, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-body);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        a { text-decoration: none; color: inherit; }
+
+        /* ─── HEADER ─── */
+        header {
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--accent);
+            letter-spacing: -0.5px;
+        }
+
+        .logo span { color: var(--text); }
+
+        .back-link {
+            font-size: 0.82rem;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: color 0.15s;
+        }
+
+        .back-link:hover { color: var(--accent); }
+        .back-link::before { content: '←'; }
+
+        /* ─── MAIN ─── */
+        main {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 4rem 5% 6rem;
+        }
+
+        .page-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--accent);
+            margin-bottom: 0.2rem;
+        }
+
+        h1 {
+            font-family: var(--font-body);
+            font-size: clamp(2rem, 5vw, 2.8rem);
+            color: var(--text);
+            letter-spacing: -0.5px;
+            margin-bottom: 0.6rem;
+            line-height: 1.15;
+        }
+
+        .page-intro {
+            font-size: 0.9rem;
+            color: var(--muted);
+            max-width: 520px;
+            line-height: 1.75;
+            margin-bottom: 0.5rem;
+        }
+
+        /* ─── COOKIE CARDS ─── */
+        .cookie-categories { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2.5rem; }
+
+        .cookie-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.4rem 1.6rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1.4rem;
+            transition: border-color 0.2s;
+        }
+
+        .cookie-card.enabled { border-color: rgba(67, 212, 178, 0.2); }
+
+        .cookie-card-text { flex: 1; }
+
+        .cookie-card-text h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.3rem;
+        }
+
+        .cookie-card-text p {
+            font-size: 0.81rem;
+            color: var(--muted);
+            line-height: 1.65;
+        }
+
+        .cookie-card-text .examples {
+            font-size: 0.75rem;
+            color: #555;
+            margin-top: 0.5rem;
+        }
+
+        /* ─── TOGGLE SWITCH ─── */
+        .toggle-wrap {
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3rem;
+            padding-top: 0.1rem;
+        }
+
+        .toggle {
+            position: relative;
+            width: 46px;
+            height: 26px;
+            cursor: pointer;
+        }
+
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+            position: absolute;
+        }
+
+        .toggle-track {
+            position: absolute;
+            inset: 0;
+            background: var(--surface2);
+            border-radius: 13px;
+            border: 1px solid var(--border);
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .toggle-thumb {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 18px;
+            height: 18px;
+            background: var(--muted);
+            border-radius: 50%;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .toggle input:checked ~ .toggle-track {
+            background: rgba(67, 212, 178, 0.15);
+            border-color: var(--accent);
+        }
+
+        .toggle input:checked ~ .toggle-thumb {
+            transform: translateX(20px);
+            background: var(--accent);
+        }
+
+        .toggle input:disabled ~ .toggle-track {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .toggle-label {
+            font-size: 0.65rem;
+            color: var(--muted);
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .toggle-label.required { color: var(--accent); }
+
+        /* ─── SAVE BUTTON AREA ─── */
+        .save-area {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-accept-all {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 0.8rem 2.2rem;
+            font-size: 0.9rem;
+            font-family: var(--font-body);
+            font-weight: 700;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: opacity 0.15s;
+        }
+
+        
+
+        .btn-save {
+            background: transparent;
+            color: var(--accent);
+            border: 1.5px solid var(--accent);
+            padding: 0.8rem 2.2rem;
+            font-size: 0.9rem;
+            font-family: var(--font-body);
+            font-weight: 700;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+        }
+        .btn-accept-all:hover:hover { opacity: 0.85; }
+
+        .btn-save:hover { background: var(--accent); color: #000; }
+
+        .save-confirm {
+            font-size: 0.82rem;
+            color: var(--accent);
+            opacity: 0;
+            transition: opacity 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .save-confirm.visible { opacity: 1; }
+        .save-confirm::before { content: '✓'; font-weight: 700; }
+
+        /* ─── INFO SECTION ─── */
+        .info-section {
+            margin-top: 4rem;
+            border-top: 1px solid var(--border);
+            padding-top: 2.5rem;
+        }
+
+        .info-section h2 {
+            font-size: 1.2rem;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        .info-section p {
+            font-size: 0.83rem;
+            color: var(--muted);
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .info-section a { color: var(--accent); text-decoration: underline; }
+
+        /* ─── FOOTER ─── */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 1.2rem 5%;
+            font-size: 0.75rem;
+            color: var(--muted);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        @media (max-width: 600px) {
+            .cookie-card { flex-direction: column; gap: 1rem; }
+            .toggle-wrap { flex-direction: row; align-items: center; }
+            .save-area { flex-direction: column; align-items: flex-start; }
+            footer { flex-direction: column; gap: 0.4rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="index.html" class="logo">SKOLE<span>SAUS</span></a>
+    <a href="index.html" class="back-link">Tilbake til forsiden</a>
+</header>
+
+<main>
+    <p class="page-label">Personvern</p>
+    <h1>Cookie-innstillinger</h1>
+    <p class="page-intro">
+        Vi respekterer ditt personvern. Velg hvilke informasjonskapsler du tillater nedenfor.
+        Nødvendige cookies er alltid aktive siden siden ikke fungerer uten dem.
+    </p>
+
+    <div class="cookie-categories">
+
+        <!-- Nødvendige -->
+        <div class="cookie-card enabled" id="card-necessary">
+            <div class="cookie-card-text">
+                <h3>Nødvendige</h3>
+                <p>Disse er helt nødvendige for at nettsiden skal fungere.</p>
+            
+            </div>
+            <div class="toggle-wrap">
+                <label class="toggle">
+                    <input type="checkbox" id="toggle-necessary" checked disabled>
+                    <span class="toggle-track"></span>
+                    <span class="toggle-thumb"></span>
+                </label>
+                <span class="toggle-label required">Alltid på</span>
+            </div>
+        </div>
+
+        <!-- Statistikk -->
+        <div class="cookie-card" id="card-analytics">
+            <div class="cookie-card-text">
+                <h3>Statistikk</h3>
+                <p>Hjelper oss å forstå hvordan besøkende bruker siden, slik at vi kan forbedre innholdet og spillene. Ingen personlig informasjon lagres.</p>
+            
+            </div>
+            <div class="toggle-wrap">
+                <label class="toggle">
+                    <input type="checkbox" id="toggle-analytics">
+                    <span class="toggle-track"></span>
+                    <span class="toggle-thumb"></span>
+                </label>
+                <span class="toggle-label" id="label-analytics">Av</span>
+            </div>
+        </div>
+
+        <!-- Markedsføring -->
+        <div class="cookie-card" id="card-marketing">
+            <div class="cookie-card-text">
+                <h3>Markedsføring</h3>
+                <p>Brukes til å vise relevante annonser.</p>
+                
+            </div>
+            <div class="toggle-wrap">
+                <label class="toggle">
+                    <input type="checkbox" id="toggle-marketing">
+                    <span class="toggle-track"></span>
+                    <span class="toggle-thumb"></span>
+                </label>
+                <span class="toggle-label" id="label-marketing">Av</span>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="save-area">
+        <button class="btn-save" onclick="savePreferences()">Lagre valg</button>
+        <button class="btn-accept-all" onclick="acceptAll()">Godta alle</button>
+        <span class="save-confirm" id="save-confirm">Innstillinger lagret</span>
+    </div>
+
+    <!-- Privacy info -->
+    <div class="info-section">
+        <h2>Om personvern på Skolesaus</h2>
+        <p>
+            Skolesaus er laget for norske skoleelever. Vi samler ikke inn personlig informasjon som navn, e-post eller alder.
+            Eventuelle statistikkdata er anonymiserte og brukes kun til å forbedre siden.
+        </p>
+        <p>
+            Vi bruker <a href="https://umami.is" target="_blank" rel="noopener">Umami</a> for anonym besøksstatistikk.
+            Umami lagrer ingen personopplysninger og bruker ikke cookies til sporing på tvers av nettsteder.
+            Data lagres på EU-servere i tråd med GDPR.
+        </p>
+        <p>
+            Du kan trekke tilbake samtykket ditt når som helst ved å endre innstillingene på denne siden.
+            Har du spørsmål? Kontakt oss på <a href="https://www.tiktok.com/@snorresaus">TikTok</a>.
+        </p>
+    </div>
+</main>
+
+<footer>
+    <span>© 2026 Skolesaus. Alle rettigheter reservert.</span>
+    <span>Laget for norske elever</span>
+</footer>
+
+<script src="skolesaus-tracking.js"></script>
+<script>
+    const analyticsToggle  = document.getElementById('toggle-analytics');
+    const marketingToggle  = document.getElementById('toggle-marketing');
+    const analyticsLabel   = document.getElementById('label-analytics');
+    const marketingLabel   = document.getElementById('label-marketing');
+    const analyticsCard    = document.getElementById('card-analytics');
+    const marketingCard    = document.getElementById('card-marketing');
+
+    // ── Load existing preferences ────────────────────────────────────────
+    function loadPreferences() {
+        try {
+            const saved = JSON.parse(localStorage.getItem('ss_cookie_consent'));
+            if (saved) {
+                analyticsToggle.checked = !!saved.analytics;
+                marketingToggle.checked = !!saved.marketing;
+                updateUI();
+            }
+        } catch(e) {}
+    }
+
+    function updateUI() {
+        analyticsLabel.textContent = analyticsToggle.checked ? 'På' : 'Av';
+        marketingLabel.textContent = marketingToggle.checked ? 'På' : 'Av';
+        analyticsCard.classList.toggle('enabled', analyticsToggle.checked);
+        marketingCard.classList.toggle('enabled', marketingToggle.checked);
+    }
+
+    analyticsToggle.addEventListener('change', updateUI);
+    marketingToggle.addEventListener('change', updateUI);
+
+    // ── Save preferences ─────────────────────────────────────────────────
+    function savePreferences() {
+        const consent = {
+            necessary: true,
+            analytics: analyticsToggle.checked,
+            marketing: marketingToggle.checked,
+            timestamp: Date.now()
+        };
+        localStorage.setItem('ss_cookie_consent', JSON.stringify(consent));
+
+        // Apply to gtag
+        gtag('consent', 'update', {
+            analytics_storage: consent.analytics ? 'granted' : 'denied',
+            ad_storage:        consent.marketing ? 'granted' : 'denied'
+        });
+
+        // Show confirmation
+        const confirm = document.getElementById('save-confirm');
+        confirm.classList.add('visible');
+        setTimeout(() => confirm.classList.remove('visible'), 3000);
+
+        // Redirect back if they came from a game link
+        const returnDest = sessionStorage.getItem('ss_prefs_return');
+        if (returnDest) {
+            sessionStorage.removeItem('ss_prefs_return');
+            sessionStorage.removeItem('ss_pending_dest');
+            setTimeout(() => window.location.href = returnDest, 800);
+        }
+    }
+
+    // ── Accept all ───────────────────────────────────────────────────────
+    function acceptAll() {
+        analyticsToggle.checked = true;
+        marketingToggle.checked = true;
+        updateUI();
+        savePreferences();
+    }
+
+    loadPreferences();
+</script>
+
+</body>
+</html>

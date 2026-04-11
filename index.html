@@ -3,275 +3,399 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skolesaus - Gjør interaktive oppgaver</title>
+    <title>Skolesaus – Interaktive aktiviteter i skoletiden</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Georgia&family=Lato:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){ dataLayer.push(arguments); }
+        gtag('consent', 'default', {
+            'ad_storage': 'denied',
+            'analytics_storage': 'denied'
+        });
+    </script>
     <style>
-        /* Grunnleggende oppsett og fargepalett */
         :root {
-            --bg-color: #0f0f13;
-            --text-color: #ffffff;
-            --accent-color: #4662ff; 
-            --card-bg: #1c1c24;
-            --hover-color: #6ac8ff;
+            --bg: #171925;
+            --surface: #161722;
+            --surface2: #2e3047;
+            --accent: #43d4b2;
+            --text: #d4d4d4;
+            --muted: #888;
+            --border: #2a2a2a;
+            --font-body: 'Lato', Arial, sans-serif;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-body);
             line-height: 1.6;
         }
 
-        a {
-            text-decoration: none;
-            color: var(--text-color);
-        }
+        a { text-decoration: none; color: inherit; }
 
-        /* Navigasjonsmeny */
+        /* ─── HEADER ─── */
         header {
-            background-color: rgba(15, 15, 19, 0.9);
             padding: 1rem 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid var(--border);
             position: sticky;
             top: 0;
             z-index: 100;
-            border-bottom: 1px solid #333;
+            background: var(--bg);
         }
 
         .logo {
+            font-family: var(--font-body);
+            font-weight: 700;
             font-size: 1.8rem;
-            font-weight: bold;
-            color: var(--accent-color);
+            color: var(--accent);
+            letter-spacing: -0.5px;
         }
 
-        nav ul {
-            list-style: none;
-            display: flex;
-            gap: 2rem;
-        }
+        .logo span { color: var(--text); }
 
-        nav a:hover {
-            color: var(--accent-color);
-            transition: color 0.3s ease;
-        }
+        .header-right { display: flex; align-items: center; gap: 2rem; }
 
-        /* Hero-seksjon */
+        .made-by { font-size: 0.78rem; font-family: var(--font-body); }
+        .made-by strong { color: var(--text); }
+
+        /* ─── HERO ─── */
         .hero {
-            height: 60vh;
-            background: linear-gradient(rgba(0,0,0,0.3), rgba(15,15,19,1)), url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop') center/cover;
+            min-height: 72vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: flex-start;
+            align-items: center;
+            text-align: center;
             padding: 0 5%;
+            position: relative;
+            overflow: hidden;
         }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background-image: url('kloss_banner.png');
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.9) saturate(0.6);
+            z-index: 0;
+        }
+
+        .hero-bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(14,14,14,0.3) 0%, rgba(14,14,14,0.7) 100%);
+        }
+
+        .hero-content { position: relative; z-index: 1; }
 
         .hero h1 {
-            font-size: 3.5rem;
+            font-family: var(--font-body);
+            font-size: clamp(3.5rem, 8vw, 6rem);
+            line-height: 1;
             margin-bottom: 1rem;
-            text-transform: uppercase;
+            color: #fff;
+            letter-spacing: -1px;
         }
 
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            max-width: 600px;
+        .hero h2 {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--muted);
+            max-width: 440px;
+            margin: 0 auto 2rem;
+            line-height: 1.7;
         }
 
-        .btn {
-            background-color: var(--accent-color);
-            color: white;
-            padding: 0.8rem 2rem;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border-radius: 5px;
-            transition: background 0.3s;
+        .hero-btns {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
-        .btn:hover {
-            background-color: var(--hover-color);
+        .btn-primary {
+            background: transparent;
+            color: var(--accent);
+            padding: 0.75rem 2rem;
+            font-size: 0.9rem;
+            font-family: var(--font-body);
+            font-weight: 700;
+            border-radius: 4px;
+            border: 1.5px solid var(--accent);
+            transition: background 0.15s, color 0.15s;
+            display: inline-block;
+            letter-spacing: 0.02em;
+            cursor: pointer;
         }
 
-        /* Spillseksjon og Spillkort */
-        .games-section {
-            padding: 4rem 5%;
+        .btn-primary:hover { background: var(--accent); color: #000; }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text);
+            padding: 0.75rem 2rem;
+            font-size: 0.9rem;
+            font-family: var(--font-body);
+            font-weight: 700;
+            border-radius: 4px;
+            border: 1.5px solid var(--text);
+            transition: border-color 0.15s, color 0.15s;
+            display: inline-block;
         }
+
+        .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* ─── GAMES SECTION ─── */
+        .games-section { padding: 5rem 5%; }
+        .section-header { margin-bottom: 2.5rem; }
 
         .section-title {
-            font-size: 2rem;
-            margin-bottom: 2rem;
-            border-left: 5px solid var(--accent-color);
-            padding-left: 10px;
+            font-family: var(--font-body);
+            font-size: 2.2rem;
+            color: var(--text);
+            letter-spacing: -0.5px;
         }
+
+        .section-title span { color: var(--accent); }
+        .section-sub { font-size: 0.85rem; color: var(--muted); margin-top: 0.4rem; }
 
         .game-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
         }
 
         .game-card {
-            background-color: var(--card-bg);
+            background: var(--surface);
+            border: 1px solid var(--border);
             border-radius: 8px;
             overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: border-color 0.2s, transform 0.2s;
+            position: relative;
         }
 
-        .game-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        .game-card:hover { border-color: rgba(93,249,161,0.3); transform: translateY(-3px); }
+
+        .game-img-wrap { width: 100%; height: 160px; overflow: hidden; position: relative; }
+
+        .game-img-wrap img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: filter 0.3s ease;
         }
 
-        .game-image {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
+        .game-card:hover .game-img-wrap img { filter: brightness(1.3) contrast(1.05); }
+
+        .game-tag {
+            position: absolute;
+            top: 10px; left: 10px;
+            background: var(--bg);
+            color: var(--accent);
+            font-size: 0.68rem;
+            font-family: var(--font-body);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            border: 1px solid var(--accent);
+            padding: 3px 9px;
+            border-radius: 3px;
         }
 
-        .game-info {
-            padding: 1.5rem;
-        }
+        .game-info { padding: 1.2rem 1.3rem 1.4rem; }
 
         .game-title {
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
+            font-family: var(--font-body);
+            font-size: 1.4rem;
+            color: var(--text);
+            margin-bottom: 0.4rem;
+            letter-spacing: -0.3px;
         }
 
-        .play-link {
-            color: var(--accent-color);
-            font-weight: bold;
+        .game-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.65; }
+
+        .play-btn-wrap {
+            overflow: hidden;
+            max-height: 0; opacity: 0;
+            transition: max-height 0.25s ease, opacity 0.2s ease, margin-top 0.25s ease;
+            margin-top: 0;
         }
 
-        .play-link:hover {
-            text-decoration: underline;
+        .game-card:hover .play-btn-wrap { max-height: 60px; opacity: 1; margin-top: 1rem; }
+
+        .play-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #000;
+            background: var(--accent);
+            padding: 0.5rem 1.2rem;
+            border-radius: 4px;
+            font-family: var(--font-body);
+            transition: opacity 0.15s;
+            cursor: pointer;
         }
 
-        /* Footer */
+        .play-btn:hover { opacity: 0.85; }
+        .play-btn::after { content: '→'; }
+
+        .play-btn.coming-soon {
+            background: var(--surface2);
+            color: var(--muted);
+            cursor: default;
+            pointer-events: none;
+        }
+
+        /* ─── FOOTER ─── */
         footer {
-            background-color: #0a0a0c;
-            padding: 3rem 5%;
+            margin-top: 3rem;
+            border-top: 1px solid var(--border);
+            padding: 3rem 5% 2rem;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            border-top: 1px solid #333;
-            margin-top: 2rem;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 3rem;
         }
 
-        .footer-col h3 {
-            color: var(--accent-color);
-            margin-bottom: 1rem;
+        .footer-brand .logo { margin-bottom: 0.8rem; display: inline-block; }
+
+        .footer-brand p { font-size: 0.8rem; color: var(--muted); max-width: 260px; line-height: 1.7; }
+
+        .footer-col h4 {
+            font-size: 0.72rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.1em;
+            color: var(--accent); margin-bottom: 0.9rem;
         }
 
-        .footer-col ul {
-            list-style: none;
-        }
-
-        .footer-col ul li {
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-col ul li a:hover {
-            color: var(--accent-color);
-        }
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 0.55rem; }
+        .footer-col ul li a { font-size: 0.82rem; color: var(--muted); transition: color 0.2s; }
+        .footer-col ul li a:hover { color: var(--text); }
 
         .footer-bottom {
-            text-align: center;
-            padding: 1rem;
-            background-color: #000;
-            font-size: 0.9rem;
-            color: #888;
+            border-top: 1px solid var(--border);
+            padding: 1rem 5%;
+            font-size: 0.75rem;
+            color: var(--muted);
+            display: flex;
+            justify-content: space-between;
         }
 
-        /* Responsivitet for mobil */
         @media (max-width: 768px) {
-            nav ul {
-                display: none; /* Kan erstattes med en hamburger-meny for mobil */
-            }
-            .hero h1 {
-                font-size: 2.5rem;
-            }
+            .hero { min-height: 60vh; padding: 4rem 5%; }
+            footer { grid-template-columns: 1fr; gap: 2rem; }
+            .footer-bottom { flex-direction: column; gap: 0.5rem; }
+            .made-by { display: none; }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo">Matteklubb</div>
+<!-- Nav is injected by nav.js -->
 
-    </header>
-
-    <section class="hero">
-        <h1>Matematikkfrukter</h1>
-        <p>Utforsk dette lærerike pedagogiske spillet for matematikk!</p>
-        <a href="fruitmerge.html" class="btn">Gjør oppgave</a>
-    </section>
-
-    <section class="games-section">
-        <h2 class="section-title">Pedagogiske mattespill for læring</h2>
-        <div class="game-grid">
-            
-            <article class="game-card">
-                <img src="https://images.unsplash.com/photo-1552820728-8b83bb6b773f?q=80&w=600&auto=format&fit=crop" alt="Spill 1" class="game-image">
-                <div class="game-info">
-                    <h3 class="game-title">Fruktspleis</h3>
-                    <a href="fruitmerge.html" class="play-link">Gå til spill &rarr;</a>
-                </div>
-            </article>
-
-            <article class="game-card">
-                <img src="https://images.unsplash.com/photo-1538481199005-c710c4e965fc?q=80&w=600&auto=format&fit=crop" alt="Spill 2" class="game-image">
-                <div class="game-info">
-                    <h3 class="game-title">Blokk Spreng</h3>
-                    <a href="block-blast.html" class="play-link">Gå til spill &rarr;</a>
-                </div>
-            </article>
-
-            <article class="game-card">
-                <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=600&auto=format&fit=crop" alt="Spill 3" class="game-image">
-                <div class="game-info">
-                    <h3 class="game-title">Pixel Racers</h3>
-                    <a href="#" class="play-link">Gå til spill &rarr;</a>
-                </div>
-            </article>
-
-            <article class="game-card">
-                <img src="https://images.unsplash.com/photo-1605901309584-818e25960b8f?q=80&w=600&auto=format&fit=crop" alt="Spill 4" class="game-image">
-                <div class="game-info">
-                    <h3 class="game-title">Zombie Survival</h3>
-                    <a href="#" class="play-link">Gå til spill &rarr;</a>
-                </div>
-            </article>
-
+<!-- ─── HERO ─── -->
+<section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+        <h1>Kloss Spreng</h1>
+        <h2>Lag rekker og rader med klosser, så de sprenger.</h2>
+        <div class="hero-btns">
+            <a href="kloss_spreng.html" class="btn-primary game-link">Gå til Kloss Spreng</a>
+            <a href="#aktiviteter" class="btn-secondary">Se alle aktiviteter</a>
         </div>
-    </section>
-
-    <footer>
-        <div class="footer-col">
-            <h3>Om Oss</h3>
-            <p>Matteklubb er Norges raskest voksende portal for gratis nettspill. Vårt mål er å levere den beste underholdningen direkte til din skjerm.</p>
-        </div>
-        <div class="footer-col">
-            <h3>Kontaktinfo</h3>
-            <ul>
-                <li>E-post: support@matteklubb.no</li>
-                <li><a href="#">TikTok</a></li>
-                <li><a href="#">Instagram</a></li>
-
-            </ul>
-
-
-        </div>
-    </footer>
-    <div class="footer-bottom">
-        &copy; 2026 Matteklubb. Alle rettigheter reservert.
     </div>
+</section>
+
+<!-- ─── GAMES SECTION ─── -->
+<section class="games-section" id="aktiviteter">
+    <div class="section-header">
+        <h2 class="section-title">Våre <span>aktiviteter</span></h2>
+        <p class="section-sub">For barneskole, ungdomsskole og VGS</p>
+    </div>
+
+    <div class="game-grid">
+
+        <article class="game-card">
+            <div class="game-img-wrap">
+                <img src="skolesaus-main/images/melon.jpg" alt="Fruktspleis">
+                <span class="game-tag">Nytt</span>
+            </div>
+            <div class="game-info">
+                <h3 class="game-title">Fruktspleis</h3>
+                <p class="game-desc">Kombiner frukter for å spleise dem sammen til nye variasjoner.</p>
+                <div class="play-btn-wrap">
+                    <a href="fruktspleis.html" class="play-btn game-link">Start</a>
+                </div>
+            </div>
+        </article>
+
+        <article class="game-card">
+            <div class="game-img-wrap">
+                <img src="kloss.png" alt="Kloss Spreng">
+                <span class="game-tag">Snorres favoritt</span>
+            </div>
+            <div class="game-info">
+                <h3 class="game-title">Kloss Spreng</h3>
+                <p class="game-desc">Spreng blokker med riktige svar og rydd banen.</p>
+                <div class="play-btn-wrap">
+                    <a href="kloss_spreng.html" class="play-btn game-link">Start</a>
+                </div>
+            </div>
+        </article>
+
+        <article class="game-card">
+            <div class="game-img-wrap">
+                <img src="skolesaus-main/Tallkombo.jpg" alt="2048">
+            </div>
+            <div class="game-info">
+                <h3 class="game-title">2048</h3>
+                <p class="game-desc">Kombiner tall for å nå 2048.</p>
+                <div class="play-btn-wrap">
+                    <a href="#" class="play-btn coming-soon">Kommer snart</a>
+                </div>
+            </div>
+        </article>
+
+    </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+    <div class="footer-brand">
+        <div class="logo">SKOLE<span>SAUS</span></div>
+        <p>Pedagogiske aktiviteter for norske skoleelever. Vi gjør skolen morsomt.</p>
+    </div>
+    <div class="footer-col">
+        <h4>Navigasjon</h4>
+        <ul>
+            <li><a href="#aktiviteter">Alle spill</a></li>
+            <li><a href="personvern.html">Personvern & cookies</a></li>
+        </ul>
+    </div>
+    <div class="footer-col">
+        <h4>Kontakt</h4>
+        <ul>
+            <li><a href="https://www.tiktok.com/@snorresaus">TikTok</a></li>
+        </ul>
+    </div>
+</footer>
+<div class="footer-bottom">
+    <span>© 2026 Skolesaus. Alle rettigheter reservert.</span>
+    <span>Laget for norske elever</span>
+</div>
+
+<!-- Shared scripts — include on every page -->
+<script src="nav.js"></script>
+<script src="skolesaus-tracking.js"></script>
+<script src="cookie-modal.js"></script>
 
 </body>
 </html>
