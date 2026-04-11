@@ -16,7 +16,7 @@
     // ── Nav items — add new pages here ───────────────────────────────────
     var NAV_ITEMS = [
         { label: 'Hjem',        href: 'index.html',      match: ['/', '/index.html'] },
-        { label: 'Personvern',  href: 'personvern.html', match: ['/personvern.html'] },
+      
     ];
 
     // ── Inject CSS ────────────────────────────────────────────────────────
@@ -77,6 +77,10 @@
         '    padding-left: 1.2rem; border-left: 1px solid #2a2a2a;',
         '    margin-left: 0.8rem; white-space: nowrap;',
         '}',
+        '}',
+        '#ss-nav .ss-nav-made-by:hover {',
+        '    color: #d4d4d4;',
+        '}',
         '#ss-nav .ss-nav-made-by strong { color: #888; }',
         '@media (max-width: 768px) {',
         '    #ss-nav .ss-nav-made-by { display: none; }',
@@ -105,7 +109,7 @@
         '<a href="index.html" class="ss-nav-logo" aria-label="Skolesaus">SKOLE<span>SAUS</span></a>' +
         '<div class="ss-nav-right">' +
             '<ul class="ss-nav-links">' + linksHTML + '</ul>' +
-            '<span class="ss-nav-made-by">Laget av <strong>Snorre Saus</strong></span>' +
+            '<span class="ss-nav-made-by">Laget av <a href="https://www.tiktok.com/@snorresaus"><strong>Snorre Saus</strong></a></span>' +
         '</div>' +
         '</nav>';
 

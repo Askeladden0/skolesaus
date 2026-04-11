@@ -3,6 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Skolesaus er pedagogiske interaktive spill for norske skoleelever. Spill Kloss Spreng, Fruktspleis, 2048 og lær gjennom morsom gaming.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://skolesaus.no/">
+    <meta property="og:title" content="Skolesaus – Interaktive aktiviteter i skoletiden">
+    <meta property="og:description" content="Pedagogiske og morsom spill for norske skoleelever. Kombinér, spreng og lær med Skolesaus.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://skolesaus.no/">
+    <meta property="og:image" content="https://skolesaus.no/kloss_banner.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Skolesaus – Interaktive aktiviteter i skoletiden">
+    <meta name="twitter:description" content="Pedagogiske og morsom spill for norske skoleelever.">
+    <meta name="twitter:image" content="https://skolesaus.no/kloss_banner.png">
     <title>Skolesaus – Interaktive aktiviteter i skoletiden</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Georgia&family=Lato:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
@@ -154,8 +166,8 @@
 
         .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
 
-        /* ─── GAMES SECTION ─── */
-        .games-section { padding: 5rem 5%; }
+        /* ─── activities SECTION ─── */
+        .activities-section { padding: 5rem 5%; }
         .section-header { margin-bottom: 2.5rem; }
 
         .section-title {
@@ -168,13 +180,13 @@
         .section-title span { color: var(--accent); }
         .section-sub { font-size: 0.85rem; color: var(--muted); margin-top: 0.4rem; }
 
-        .game-grid {
+        .activity-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 1.5rem;
         }
 
-        .game-card {
+        .activity-card {
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 8px;
@@ -183,18 +195,18 @@
             position: relative;
         }
 
-        .game-card:hover { border-color: rgba(93,249,161,0.3); transform: translateY(-3px); }
+        .activity-card:hover { border-color: rgba(93,249,161,0.3); transform: translateY(-3px); }
 
-        .game-img-wrap { width: 100%; height: 160px; overflow: hidden; position: relative; }
+        .activity-img-wrap { width: 100%; height: 160px; overflow: hidden; position: relative; }
 
-        .game-img-wrap img {
+        .activity-img-wrap img {
             width: 100%; height: 100%; object-fit: cover;
             transition: filter 0.3s ease;
         }
 
-        .game-card:hover .game-img-wrap img { filter: brightness(1.3) contrast(1.05); }
+        .activity-card:hover .activity-img-wrap img { filter: brightness(1.3) contrast(1.05); }
 
-        .game-tag {
+        .activity-tag {
             position: absolute;
             top: 10px; left: 10px;
             background: var(--bg);
@@ -209,9 +221,9 @@
             border-radius: 3px;
         }
 
-        .game-info { padding: 1.2rem 1.3rem 1.4rem; }
+        .activity-info { padding: 1.2rem 1.3rem 1.4rem; }
 
-        .game-title {
+        .activity-title {
             font-family: var(--font-body);
             font-size: 1.4rem;
             color: var(--text);
@@ -219,7 +231,7 @@
             letter-spacing: -0.3px;
         }
 
-        .game-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.65; }
+        .activity-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.65; }
 
         .play-btn-wrap {
             overflow: hidden;
@@ -228,7 +240,7 @@
             margin-top: 0;
         }
 
-        .game-card:hover .play-btn-wrap { max-height: 60px; opacity: 1; margin-top: 1rem; }
+        .activity-card:hover .play-btn-wrap { max-height: 60px; opacity: 1; margin-top: 1rem; }
 
         .play-btn {
             display: inline-flex;
@@ -296,6 +308,27 @@
             .made-by { display: none; }
         }
     </style>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Skolesaus",
+      "description": "Pedagogiske interaktive spill for norske skoleelever",
+      "url": "https://skolesaus.no",
+      "logo": "https://skolesaus.no/logo.png",
+      "sameAs": ["https://www.tiktok.com/@snorresaus"]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Hjem", "item": "https://skolesaus.no"},
+        {"@type": "ListItem", "position": 2, "name": "Aktiviteter", "item": "https://skolesaus.no#aktiviteter"}
+      ]
+    }
+    </script>
 </head>
 <body>
 
@@ -308,58 +341,58 @@
         <h1>Kloss Spreng</h1>
         <h2>Lag rekker og rader med klosser, så de sprenger.</h2>
         <div class="hero-btns">
-            <a href="kloss_spreng.html" class="btn-primary game-link">Gå til Kloss Spreng</a>
+            <a href="kloss_spreng.html" class="btn-primary activity-link">Gå til Kloss Spreng</a>
             <a href="#aktiviteter" class="btn-secondary">Se alle aktiviteter</a>
         </div>
     </div>
 </section>
 
-<!-- ─── GAMES SECTION ─── -->
-<section class="games-section" id="aktiviteter">
+<!-- ─── activities SECTION ─── -->
+<section class="activities-section" id="aktiviteter">
     <div class="section-header">
         <h2 class="section-title">Våre <span>aktiviteter</span></h2>
         <p class="section-sub">For barneskole, ungdomsskole og VGS</p>
     </div>
 
-    <div class="game-grid">
+    <div class="activity-grid">
 
-        <article class="game-card">
-            <div class="game-img-wrap">
-                <img src="skolesaus-main/images/melon.jpg" alt="Fruktspleis">
-                <span class="game-tag">Nytt</span>
+        <article class="activity-card" itemscope itemtype="https://schema.org/EducationalGame">
+            <div class="activity-img-wrap">
+                <img src="skolesaus-main/images/melon.jpg" alt="Fruktspleis - Kombinér og sples frukter sammen">
+                <span class="activity-tag">Nytt</span>
             </div>
-            <div class="game-info">
-                <h3 class="game-title">Fruktspleis</h3>
-                <p class="game-desc">Kombiner frukter for å spleise dem sammen til nye variasjoner.</p>
+            <div class="activity-info">
+                <h3 class="activity-title" itemprop="name">Fruktspleis</h3>
+                <p class="activity-desc" itemprop="description">Kombinér frukter for å spleise dem sammen til nye variasjoner. Planlegg strategisk og oppnå høyere poengsum i dette morsom og utfordrende puslespillet.</p>
                 <div class="play-btn-wrap">
-                    <a href="fruktspleis.html" class="play-btn game-link">Start</a>
+                    <a href="fruktspleis.html" class="play-btn activity-link">Start</a>
                 </div>
             </div>
         </article>
 
-        <article class="game-card">
-            <div class="game-img-wrap">
-                <img src="kloss.png" alt="Kloss Spreng">
-                <span class="game-tag">Snorres favoritt</span>
+        <article class="activity-card" itemscope itemtype="https://schema.org/EducationalGame">
+            <div class="activity-img-wrap">
+                <img src="kloss.png" alt="Kloss Spreng - Puslespillspill med blokker">
+                <span class="activity-tag">Snorres favoritt</span>
             </div>
-            <div class="game-info">
-                <h3 class="game-title">Kloss Spreng</h3>
-                <p class="game-desc">Spreng blokker med riktige svar og rydd banen.</p>
+            <div class="activity-info">
+                <h3 class="activity-title" itemprop="name">Kloss Spreng</h3>
+                <p class="activity-desc" itemprop="description">Spreng blokker ved å danne fullstendige rader og kolonner. Et tilforlatelig puslespill som tester strategisk tenkning og planlegging.</p>
                 <div class="play-btn-wrap">
-                    <a href="kloss_spreng.html" class="play-btn game-link">Start</a>
+                    <a href="kloss_spreng.html" class="play-btn activity-link">Start</a>
                 </div>
             </div>
         </article>
 
-        <article class="game-card">
-            <div class="game-img-wrap">
-                <img src="skolesaus-main/Tallkombo.jpg" alt="2048">
+        <article class="activity-card" itemscope itemtype="https://schema.org/EducationalGame">
+            <div class="activity-img-wrap">
+                <img src="skolesaus-main/Tallkombo.jpg" alt="2048 - Kombinér tall for å nå målnummeret">
             </div>
-            <div class="game-info">
-                <h3 class="game-title">2048</h3>
-                <p class="game-desc">Kombiner tall for å nå 2048.</p>
+            <div class="activity-info">
+                <h3 class="activity-title" itemprop="name">2048</h3>
+                <p class="activity-desc" itemprop="description">Kombinér tall for å nå 2048. Utvikl mattenkingen din og øv på tallkombinering gjennom et engasjerende puslespill.</p>
                 <div class="play-btn-wrap">
-                    <a href="#" class="play-btn coming-soon">Kommer snart</a>
+                    <a href="tallkombo.html" class="play-btn activity-link">Start</a>
                 </div>
             </div>
         </article>
@@ -395,7 +428,7 @@
 <!-- Shared scripts — include on every page -->
 <script src="nav.js"></script>
 <script src="skolesaus-tracking.js"></script>
-<script src="cookie-modal.js"></script>
+
 
 </body>
 </html>
