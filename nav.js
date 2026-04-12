@@ -60,7 +60,7 @@
         '    list-style: none; margin: 0; padding: 0;',
         '}',
         '#ss-nav .ss-nav-links li a {',
-        '    font-size: 0.82rem; font-weight: 700; color: #888;',
+        '    font-size: 0.82rem; font-weight: 700; color: #d6d5d5;',
         '    padding: 0.4rem 0.85rem; border-radius: 4px;',
         '    border: 1px solid transparent;',
         '    transition: color 0.15s, border-color 0.15s, background 0.15s;',
@@ -73,15 +73,15 @@
         '    background: rgba(67,212,178,0.06);',
         '}',
         '#ss-nav .ss-nav-made-by {',
-        '    font-size: 0.75rem; color: #555;',
+        '    font-size: 0.75rem; color: #43d4b2;',
         '    padding-left: 1.2rem; border-left: 1px solid #2a2a2a;',
         '    margin-left: 0.8rem; white-space: nowrap;',
         '}',
         '}',
         '#ss-nav .ss-nav-made-by:hover {',
-        '    color: #d4d4d4;',
+        '    color: #afafaf;',
         '}',
-        '#ss-nav .ss-nav-made-by strong { color: #888; }',
+        '#ss-nav .ss-nav-made-by strong { color: #fcf9f9; }',
         '@media (max-width: 768px) {',
         '    #ss-nav .ss-nav-made-by { display: none; }',
         '    #ss-nav .ss-nav-logo { font-size: 1.4rem; }',
@@ -109,7 +109,7 @@
         '<a href="index.html" class="ss-nav-logo" aria-label="Skolesaus">SKOLE<span>SAUS</span></a>' +
         '<div class="ss-nav-right">' +
             '<ul class="ss-nav-links">' + linksHTML + '</ul>' +
-            '<span class="ss-nav-made-by">Laget av <a href="https://www.tiktok.com/@snorresaus"><strong>Snorre Saus</strong></a></span>' +
+            '<span class="ss-nav-made-by">Laget av <a href="https://www.tiktok.com/@snorresaus" style="color: #43d4b2; text-decoration: underline;"><strong>Snorre Saus</strong></a></span>' +
         '</div>' +
         '</nav>';
 

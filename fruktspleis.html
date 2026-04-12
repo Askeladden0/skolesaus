@@ -19,7 +19,6 @@
     user-select: none;
   }
 
-  /* ── activity HEADER (renamed from #site-header to avoid nav.js replacing it) ── */
   #activity-header {
     background: rgba(0,0,0,0.15);
     backdrop-filter: blur(8px);
@@ -145,6 +144,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    text-align: center;
     gap: 20px;
   }
 
@@ -180,13 +180,6 @@
 </head>
 <body>
 
-<!-- nav.js injects the Skolesaus nav at the top automatically -->
-<script src="nav.js"></script>
-<script src="skolesaus-tracking.js"></script>
-<script src="cookie-modal.js"></script>
-
-<!-- activity's own sub-header — uses id="activity-header" not "site-header" so nav.js won't replace it -->
-
 <div id="main">
   <div id="activity-center">
     <div id="activity-wrapper">
@@ -208,13 +201,13 @@
       </div>
 
       <div id="canvas-area">
-        <canvas id="activityCanvas" width="380" height="560"></canvas>
+        <canvas id="activityCanvas" width="430" height="560"></canvas>
         <div id="drop-indicator">
           <div class="dashed-line" id="dynamicDashed"></div>
         </div>
         <div id="overlay">
-          <h2>💥 activity OVER 💥</h2>
-          <div class="final-score">Poeng: <span id="final-score-val" style="font-size:32px;color:#ffcc66;">0</span></div>
+          <h2>💥 DU TAPTE 💥</h2>
+          <div class="final-score" style="font-size:32px;color:#ffcc66;">Poeng: <span id="final-score-val" style="font-size:32px;color:#ffcc66;">0</span></div>
           <button id="restart-btn">🍎 Spill Igjen 🍊</button>
         </div>
       </div>
@@ -224,55 +217,74 @@
   </div>
 </div>
 
-<script>
+<script type="module">
+  // FIX 1: Correct CDN URL for Rapier2D
+  import * as RAPIER from 'https://cdn.jsdelivr.net/npm/@dimforge/rapier2d-compat@0.16.1/rapier.es.js';
+  await RAPIER.init();
+
+  const CANVAS_W = 410, CANVAS_H = 560;
+  const WALL_TOP_PX = 64;
+
+  const PHYSICS_W = 0.6;
+  const PHYSICS_H = 0.9;
+  const WALL_THICKNESS = PHYSICS_W / 20;
+
+  function pxToMetersX(px) { return (px / CANVAS_W) * PHYSICS_W; }
+  function pxToMetersY(px) { return (px / CANVAS_H) * PHYSICS_H; }
+  function metersToPxX(m) { return (m / PHYSICS_W) * CANVAS_W; }
+  function metersToPxY(m) { return (m / PHYSICS_H) * CANVAS_H; }
+
+  const GAME_OVER_HEIGHT = pxToMetersY(WALL_TOP_PX);
+
   const FRUIT_TYPES = [
-    { name:'Cherry',     radius:17, color:'#e8334a', emoji:'🍓', points:1  },
-    { name:'Strawberry', radius:38, color:'#f74a60', emoji:'🍒', points:15 },
-    { name:'Grape',      radius:26, color:'#9b59b6', emoji:'🍇', points:6  },
-    { name:'Lemon',      radius:32, color:'#f9e04b', emoji:'🍋', points:10 },
-    { name:'Orange',     radius:20, color:'#f5820d', emoji:'🍊', points:3  },
-    { name:'Apple',      radius:44, color:'#e84040', emoji:'🍎', points:21 },
-    { name:'Pear',       radius:50, color:'#8bc34a', emoji:'🍐', points:28 },
-    { name:'Peach',      radius:57, color:'#ffb347', emoji:'🍑', points:36 },
-    { name:'Pineapple',  radius:65, color:'#ffd700', emoji:'🍍', points:45 },
-    { name:'Melon',      radius:70, color:'#77dd77', emoji:'🍈', points:55 },
-    { name:'Watermelon', radius:85, color:'#3cb371', emoji:'🍉', points:66 },
+    { name:'Cherry',     pixelRadius:17, physicsRadius: pxToMetersX(17), color:'#e8334a', emoji:'🍒', points:1  },
+    { name:'Lemon',      pixelRadius:24, physicsRadius: pxToMetersX(24), color:'#f9e04b', emoji:'🍋', points:3 },
+    { name:'Grape',      pixelRadius:31, physicsRadius: pxToMetersX(31), color:'#9b59b6', emoji:'🍇', points:8  },
+    { name:'Strawberry', pixelRadius:38, physicsRadius: pxToMetersX(38), color:'#f74a60', emoji:'🍓', points:12 },
+    { name:'Orange',     pixelRadius:45, physicsRadius: pxToMetersX(45), color:'#f5820d', emoji:'🍊', points:16  },
+    { name:'Apple',      pixelRadius:52, physicsRadius: pxToMetersX(52), color:'#e84040', emoji:'🍎', points:21 },
+    { name:'Pear',       pixelRadius:59, physicsRadius: pxToMetersX(59), color:'#8bc34a', emoji:'🍐', points:28 },
+    { name:'Peach',      pixelRadius:66, physicsRadius: pxToMetersX(66), color:'#ffb347', emoji:'🍑', points:36 },
+    { name:'Pineapple',  pixelRadius:73, physicsRadius: pxToMetersX(73), color:'#ffd700', emoji:'🍍', points:45 },
+    { name:'Melon',      pixelRadius:80, physicsRadius: pxToMetersX(80), color:'#77dd77', emoji:'🍈', points:55 },
+    { name:'Watermelon', pixelRadius:87, physicsRadius: pxToMetersX(87), color:'#3cb371', emoji:'🍉', points:66 },
   ];
 
-  const CANVAS_W = 380, CANVAS_H = 560;
-  const WALL_TOP = 64, FLOOR = CANVAS_H - 12;
-  const GRAVITY = 0.42;
-  const PHYSICS_SUBSTEPS = 6;
-  const AIR_DRAG = 0.999;
-  const GROUND_DRAG = 0.9;
-  const WALL_BOUNCE = 0.04;
-  const FRUIT_BOUNCE = 0.02;
-  const COLLISION_FRICTION = 0.22;
-  const POSITION_SLOP = 0.02;
-  const POSITION_BIAS = 0.82;
-  const REST_SPEED_X = 0.1;
-  const REST_SPEED_Y = 0.14;
-  const REST_ANGULAR_SPEED = 0.012;
-  const REST_FRAMES_REQUIRED = 22;
-  const WAKE_SPEED = 0.3;
-  const MERGE_DISTANCE_BONUS = 1.25;
-  const MERGE_SPEED_LIMIT = 1.35;
-  const MERGE_COOLDOWN_FRAMES = 8;
+  const GRAVITY = 9.86 * 0.15;
+  const RESTITUTION = 0.25;
+  const FRICTION = 0.35;
+  const LINEAR_DAMPING = 0.2;
+  const ANGULAR_DAMPING = 0.4;
+  const SOLVER_ITERATIONS = 8;
+
+  let physicsWorld = null;
+  let eventQueue = null;
+  let colliderMap = new Map();
+
+  let fruits = [];
+  let fruitRenderStates = [];
+  let score = 0;
+  let isActivityOver = false;
+  let currentFruitType = 0;
+  let nextFruitType = 0;
+  let mouseX = CANVAS_W / 2;
+  let canDrop = true;
+  let dropCooldown = 0;
+  let particles = [];
+  let mergeEffects = [];
+  let bestScore = localStorage.getItem('fruitBest') ? parseInt(localStorage.getItem('fruitBest')) : 0;
+  let gentleShake = 0;
+  let comboFlash = 0;
+  let currentId = 0;
 
   const canvas = document.getElementById('activityCanvas');
   const ctx = canvas.getContext('2d');
-  canvas.width = CANVAS_W; canvas.height = CANVAS_H;
+  canvas.width = CANVAS_W;
+  canvas.height = CANVAS_H;
   const nextCanvas = document.getElementById('next-canvas');
   const nextCtx = nextCanvas.getContext('2d');
-  nextCanvas.width = 80; nextCanvas.height = 80;
-
-  let fruits = [], score = 0, isactivityOver = false;
-  let currentFruitType = 0, nextFruitType = 0;
-  let mouseX = CANVAS_W/2, canDrop = true, dropCooldown = 0;
-  let particles = [], mergeEffects = [], activityOverTimer = 0;
-  let bestScore = localStorage.getItem('fruitBest') ? parseInt(localStorage.getItem('fruitBest')) : 0;
-  let uid = 0;
-  let gentleShake = 0, comboFlash = 0;
+  nextCanvas.width = 80;
+  nextCanvas.height = 80;
 
   const scoreEl = document.getElementById('score-value');
   const bestEl = document.getElementById('best-value');
@@ -281,6 +293,281 @@
   const dropIndicatorDiv = document.getElementById('drop-indicator');
 
   bestEl.textContent = bestScore;
+
+  class Fruit {
+    constructor(fruitIndex, x, y) {
+      const fruitData = FRUIT_TYPES[fruitIndex];
+      if (!fruitData) throw new Error(`Invalid fruitIndex: ${fruitIndex}`);
+
+      this.id = ++currentId;
+      this.fruitIndex = fruitIndex;
+      this.pixelRadius = fruitData.pixelRadius;
+      this.physicsRadius = fruitData.physicsRadius;
+      this.points = fruitData.points;
+      this.name = fruitData.name;
+
+      const bodyDesc = RAPIER.RigidBodyDesc.dynamic()
+        .setTranslation(x, y)
+        .setLinearDamping(LINEAR_DAMPING)
+        .setAngularDamping(ANGULAR_DAMPING);
+      this.body = physicsWorld.createRigidBody(bodyDesc);
+
+      const colliderDesc = RAPIER.ColliderDesc.ball(this.physicsRadius)
+        .setRestitution(RESTITUTION)
+        .setFriction(FRICTION)
+        .setActiveEvents(RAPIER.ActiveEvents.COLLISION_EVENTS);
+      this.collider = physicsWorld.createCollider(colliderDesc, this.body);
+
+      this.startOutOfBounds = null;
+    }
+
+    isOutOfBounds() {
+      const topY = this.body.translation().y - this.physicsRadius;
+      if (topY < GAME_OVER_HEIGHT) {
+        if (this.startOutOfBounds && performance.now() - this.startOutOfBounds > 1000) {
+          return true;
+        }
+        if (!this.startOutOfBounds) {
+          this.startOutOfBounds = performance.now();
+        }
+      } else {
+        this.startOutOfBounds = null;
+      }
+      return false;
+    }
+
+    destroy() {
+      if (this.body && this.collider) {
+        try {
+          physicsWorld.removeCollider(this.collider, false);
+          physicsWorld.removeRigidBody(this.body);
+        } catch(e) {
+          // Already removed
+        }
+      }
+    }
+  }
+
+  class Boundary {
+    constructor(x, y, width, height) {
+      const bodyDesc = RAPIER.RigidBodyDesc.fixed().setTranslation(x, y);
+      this.body = physicsWorld.createRigidBody(bodyDesc);
+      const colliderDesc = RAPIER.ColliderDesc.cuboid(width / 2, height / 2);
+      this.collider = physicsWorld.createCollider(colliderDesc, this.body);
+    }
+  }
+
+  function initPhysics() {
+    try {
+      const gravity = new RAPIER.Vector2(0.0, GRAVITY);
+      physicsWorld = new RAPIER.World(gravity);
+      physicsWorld.integrationParameters.numSolverIterations = SOLVER_ITERATIONS;
+      eventQueue = new RAPIER.EventQueue(true);
+
+      createWalls();
+
+      currentFruitType = randomDropType();
+      pickNext();
+      activityLoop();
+
+    } catch (error) {
+      console.error('Failed to initialize Rapier physics:', error);
+      alert('Kunne ikke laste fysikkmotoren. Prøv å laste siden på nytt. Feil: ' + error.message);
+    }
+  }
+
+  function createWalls() {
+    const leftWall = new Boundary(-WALL_THICKNESS / 2, PHYSICS_H / 2, WALL_THICKNESS, PHYSICS_H);
+    const rightWall = new Boundary(PHYSICS_W + WALL_THICKNESS / 2, PHYSICS_H / 2, WALL_THICKNESS, PHYSICS_H);
+    const floor = new Boundary(PHYSICS_W / 2, PHYSICS_H + WALL_THICKNESS / 2, PHYSICS_W, WALL_THICKNESS);
+    // Walls don't need to be in colliderMap since we check instanceof Fruit
+  }
+
+  function addFruit(fruitIndex, x, y) {
+    const fruit = new Fruit(fruitIndex, x, y);
+    fruits.push(fruit);
+    // FIX 2: Key by collider handle (not body handle) to match collision events
+    colliderMap.set(fruit.collider.handle, fruit);
+
+    fruitRenderStates.push({
+      id: fruit.id,
+      x: metersToPxX(x),
+      y: metersToPxY(y),
+      rotation: 0,
+      fruitIndex: fruitIndex,
+      pixelRadius: fruit.pixelRadius,
+      scale: 0.1,
+      scaleTarget: 1,
+      merging: false
+    });
+
+    return fruit;
+  }
+
+  function spawnFruit(pxX) {
+    if (isActivityOver || !canDrop || !physicsWorld) return;
+
+    const fruitData = FRUIT_TYPES[currentFruitType];
+    const spawnX = Math.max(fruitData.pixelRadius, Math.min(CANVAS_W - fruitData.pixelRadius, pxX));
+    const physicsX = pxToMetersX(spawnX);
+    const physicsY = pxToMetersY(30);
+
+    let spawnBlocked = false;
+    for (const fruit of fruits) {
+      const pos = fruit.body.translation();
+      const dx = physicsX - pos.x;
+      const dy = physicsY - pos.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const minDist = fruit.physicsRadius + fruitData.physicsRadius;
+      if (dist < minDist) {
+        spawnBlocked = true;
+        break;
+      }
+    }
+
+    if (spawnBlocked) {
+      let nearTop = false;
+      for (const fruit of fruits) {
+        const pos = fruit.body.translation();
+        const topY = pos.y - fruit.physicsRadius;
+        if (topY < GAME_OVER_HEIGHT + 0.1) {
+          nearTop = true;
+          break;
+        }
+      }
+      if (nearTop) {
+        triggerActivityOver();
+        return;
+      }
+      return;
+    }
+
+    const fruit = addFruit(currentFruitType, physicsX, physicsY);
+    fruit.body.setLinvel({ x: 0, y: 0.2 }, true);
+
+    currentFruitType = nextFruitType;
+    pickNext();
+    canDrop = false;
+    dropCooldown = 36;
+
+    spawnParticles(spawnX, 32, fruitData.color, 5);
+  }
+
+  // Track pending merges to avoid double-merging
+  const pendingMerges = new Set();
+
+  function mergeFruits(fruitA, fruitB) {
+    // FIX 3: Guard against already-destroyed bodies
+    try {
+      if (!fruitA.body || !fruitB.body) return;
+      fruitA.body.translation(); // Will throw if invalid
+      fruitB.body.translation();
+    } catch(e) {
+      return;
+    }
+
+    const posA = fruitA.body.translation();
+    const posB = fruitB.body.translation();
+    const midX = (posA.x + posB.x) / 2;
+    const midY = (posA.y + posB.y) / 2;
+
+    let nextIndex = fruitA.fruitIndex + 1;
+    if (nextIndex >= FRUIT_TYPES.length) nextIndex = FRUIT_TYPES.length - 1;
+
+    const nextFruitData = FRUIT_TYPES[nextIndex];
+
+    // FIX 4: Remove from colliderMap using collider.handle (not body.handle)
+    colliderMap.delete(fruitA.collider.handle);
+    colliderMap.delete(fruitB.collider.handle);
+
+    fruitA.destroy();
+    fruitB.destroy();
+
+    fruits = fruits.filter(f => f !== fruitA && f !== fruitB);
+    fruitRenderStates = fruitRenderStates.filter(rs => rs.id !== fruitA.id && rs.id !== fruitB.id);
+
+    // Only spawn merged fruit if not at max
+    if (fruitA.fruitIndex < FRUIT_TYPES.length - 1) {
+      const newFruit = addFruit(nextIndex, midX, midY);
+      newFruit.body.setLinvel({ x: 0, y: -0.5 }, true);
+    }
+
+    updateScore(nextFruitData.points);
+
+    const pxX = metersToPxX(midX);
+    const pxY = metersToPxY(midY);
+    spawnParticles(pxX, pxY, nextFruitData.color, 18);
+    spawnMergeEffect(pxX, pxY, nextFruitData.pixelRadius, nextFruitData.color, nextIndex);
+  }
+
+  function handleCollisionEvents() {
+    if (!eventQueue) return;
+
+    const mergedHandlesThisStep = new Set();
+    const mergePairs = [];
+
+    eventQueue.drainCollisionEvents((handle1, handle2, started) => {
+      if (!started) return;
+
+      const itemA = colliderMap.get(handle1);
+      const itemB = colliderMap.get(handle2);
+
+      if (!itemA || !itemB) return;
+      if (!(itemA instanceof Fruit) || !(itemB instanceof Fruit)) return;
+      if (mergedHandlesThisStep.has(handle1) || mergedHandlesThisStep.has(handle2)) return;
+
+      if (itemA.fruitIndex === itemB.fruitIndex && itemA.fruitIndex < FRUIT_TYPES.length - 1) {
+        mergePairs.push({ fruitA: itemA, fruitB: itemB });
+        mergedHandlesThisStep.add(handle1);
+        mergedHandlesThisStep.add(handle2);
+      }
+    });
+
+    for (const { fruitA, fruitB } of mergePairs) {
+      mergeFruits(fruitA, fruitB);
+    }
+  }
+
+  function syncFruitsToRenderState() {
+    for (const fruit of fruits) {
+      try {
+        const pos = fruit.body.translation();
+        const pxX = metersToPxX(pos.x);
+        const pxY = metersToPxY(pos.y);
+        const rotation = fruit.body.rotation();
+
+        let renderState = fruitRenderStates.find(rs => rs.id === fruit.id);
+        if (renderState) {
+          renderState.x = pxX;
+          renderState.y = pxY;
+          renderState.rotation = rotation;
+        }
+      } catch(e) {
+        // Body might be invalid, skip
+      }
+    }
+
+    const fruitIds = new Set(fruits.map(f => f.id));
+    fruitRenderStates = fruitRenderStates.filter(rs => fruitIds.has(rs.id));
+  }
+
+  function checkActivityOver() {
+    if (isActivityOver) return;
+    for (const fruit of fruits) {
+      if (fruit.isOutOfBounds()) {
+        triggerActivityOver();
+        return;
+      }
+    }
+  }
+
+  function triggerActivityOver() {
+    if (isActivityOver) return;
+    isActivityOver = true;
+    finalScoreEl.textContent = score;
+    overlay.style.display = 'flex';
+    dropIndicatorDiv.style.display = 'none';
+  }
 
   function updateScore(add) {
     score += add;
@@ -293,90 +580,78 @@
     comboFlash = 8;
   }
 
- function makeFruit(x, y, type) {
-  const radius = FRUIT_TYPES[type].radius;
-  const mass = Math.pow(radius, 2.3) * 0.0015;
-
-  return { 
-    id: uid++, 
-    x, y, 
-    vx: 0, vy: 0, 
-    angle: 0,        // 🔥 rotation
-    va: 0,           // 🔥 angular velocity
-    mass,
-    inertia: mass * radius * radius * 0.5, // rotational inertia
-    type, 
-    radius,
-    sleeping: false,
-    restFrames: 0,
-    mergeCooldown: MERGE_COOLDOWN_FRAMES,
-    merging: false, 
-    scale: 1, 
-    scaleTarget: 1 
-  };
-}
-
-  function isPointInCloudShape(x, y, centerX, centerY, radius) {
-    // Check if point is in main body
-    let dx = x - centerX;
-    let dy = y - centerY;
-    let distToCenter = Math.sqrt(dx*dx + dy*dy);
-    if (distToCenter <= radius * 0.75) return true;
-    
-    // Check if point is in any bump
-    let bumpRadius = radius * 0.35;
-    let numBumps = 12;
-    for (let i = 0; i < numBumps; i++) {
-      let angle = (i / numBumps) * Math.PI * 2;
-      let bx = centerX + Math.cos(angle) * (radius * 0.7);
-      let by = centerY + Math.sin(angle) * (radius * 0.7);
-      let distToBump = Math.sqrt((x - bx)*(x - bx) + (y - by)*(y - by));
-      if (distToBump <= bumpRadius) return true;
+  function spawnParticles(x, y, color, count = 10) {
+    for (let i = 0; i < count; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const speed = 1 + Math.random() * 3;
+      particles.push({
+        x, y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed - 1.2,
+        life: 0.9,
+        decay: 0.03 + Math.random() * 0.04,
+        radius: 2 + Math.random() * 5,
+        color
+      });
     }
-    return false;
   }
 
-  function getCloudShapeRadius(fruit) {
-    // Return the effective radius for cloud shapes (main body + bump radius)
-    if (!fruit || !fruit.radius || isNaN(fruit.radius)) return 26; // Safe default
-    let radius = parseFloat(fruit.radius);
-    if (!isFinite(radius)) return 26;
-    return Math.max(26, radius * 0.75 + radius * 0.35);
+  function spawnMergeEffect(x, y, radius, color, fruitTypeIndex) {
+    mergeEffects.push({ x, y, radius, maxR: radius * 2.3, color, life: 1 });
+    for (let s = 0; s < 14; s++) {
+      const ang = Math.random() * Math.PI * 2;
+      const radSpd = 1.5 + Math.random() * 4;
+      particles.push({
+        x, y,
+        vx: Math.cos(ang) * radSpd,
+        vy: Math.sin(ang) * radSpd - 1,
+        life: 0.85,
+        decay: 0.035,
+        radius: 2 + Math.random() * 4,
+        color: '#FFD966'
+      });
+    }
+    gentleShake = (fruitTypeIndex >= 7) ? 3.5 : 0;
+  }
+
+  function randomDropType() {
+    const weights = [30, 25, 20, 15, 10];
+    let total = weights.reduce((a, b) => a + b, 0);
+    let r = Math.random() * total;
+    for (let i = 0; i < weights.length; i++) {
+      r -= weights[i];
+      if (r <= 0) return i;
+    }
+    return 0;
+  }
+
+  function pickNext() {
+    nextFruitType = randomDropType();
+    drawNextFruit();
   }
 
   function drawStrawberryShape(ctx, radius, color) {
-    // Draw true strawberry shape - single point on top, rounded body
     ctx.beginPath();
-    // Start at top point
-    ctx.moveTo(0, -radius * 0.95);
-    // Right side - curve down from point
-    ctx.bezierCurveTo(radius * 0.6, -radius * 0.4, radius * 0.85, radius * 0.1, radius * 0.8, radius * 0.7);
-    // Bottom right curve
-    ctx.bezierCurveTo(radius * 0.6, radius * 0.95, radius * 0.2, radius * 1.0, 0, radius * 0.95);
-    // Bottom left curve
-    ctx.bezierCurveTo(-radius * 0.2, radius * 1.0, -radius * 0.6, radius * 0.95, -radius * 0.8, radius * 0.7);
-    // Left side - curve up from bottom
-    ctx.bezierCurveTo(-radius * 0.85, radius * 0.1, -radius * 0.6, -radius * 0.4, 0, -radius * 0.95);
+    ctx.moveTo(0, -radius * 0.82);
+    ctx.bezierCurveTo(radius * 0.32, -radius * 0.9, radius * 0.72, -radius * 0.38, radius * 0.84, radius * 0.28);
+    ctx.bezierCurveTo(radius * 0.88, radius * 0.74, radius * 0.46, radius * 1.02, 0, radius * 0.94);
+    ctx.bezierCurveTo(-radius * 0.46, radius * 1.02, -radius * 0.88, radius * 0.74, -radius * 0.84, radius * 0.28);
+    ctx.bezierCurveTo(-radius * 0.72, -radius * 0.38, -radius * 0.32, -radius * 0.9, 0, -radius * 0.82);
     ctx.fillStyle = color;
     ctx.fill();
   }
 
   function drawGrapeCloudShape(ctx, radius, color) {
-    // Draw bumpy cloud shape
-    let bumpRadius = radius * 0.35;
-    let numBumps = 12;
-    
-    // Draw main body first
+    const bumpRadius = radius * 0.35;
+    const numBumps = 12;
     ctx.beginPath();
     ctx.arc(0, 0, radius * 0.75, 0, Math.PI * 2);
     ctx.fillStyle = color;
     ctx.fill();
-    
-    // Draw bumps around the edge
     for (let i = 0; i < numBumps; i++) {
-      let angle = (i / numBumps) * Math.PI * 2;
-      let bx = Math.cos(angle) * (radius * 0.7);
-      let by = Math.sin(angle) * (radius * 0.7);
+      const angle = (i / numBumps) * Math.PI * 2;
+      const bx = Math.cos(angle) * (radius * 0.7);
+      const by = Math.sin(angle) * (radius * 0.7);
       ctx.beginPath();
       ctx.arc(bx, by, bumpRadius, 0, Math.PI * 2);
       ctx.fillStyle = color;
@@ -384,517 +659,280 @@
     }
   }
 
-  function randomDropType() {
-    const weights = [30,25,20,15,10];
-    let total = weights.reduce((a,b)=>a+b,0), r = Math.random()*total;
-    for(let i=0;i<weights.length;i++){ r-=weights[i]; if(r<=0) return i; }
-    return 0;
-  }
-
-  function pickNext() { nextFruitType = randomDropType(); drawNextFruit(); }
-
   function drawNextFruit() {
-    nextCtx.clearRect(0,0,80,80);
+    nextCtx.clearRect(0, 0, 80, 80);
     const ft = FRUIT_TYPES[nextFruitType];
-    const r = Math.min(ft.radius,32);
+    const r = Math.min(ft.pixelRadius, 32);
     nextCtx.save();
     nextCtx.translate(40, 40);
-    nextCtx.shadowBlur = 8; nextCtx.shadowColor = ft.color;
-    
-    // Draw shape based on fruit type
-    if (nextFruitType === 1) {
-      // Strawberry - soft triangle shape
-      drawStrawberryShape(nextCtx, r, ft.color);
-    } else if (nextFruitType === 2) {
-      // Grape - bumpy cloud shape
+    nextCtx.shadowBlur = 8;
+    nextCtx.shadowColor = ft.color;
+
+    if (nextFruitType === 2) {
       drawGrapeCloudShape(nextCtx, r, ft.color);
+    } else if (nextFruitType === 3) {
+      drawStrawberryShape(nextCtx, r, ft.color);
     } else {
-      // Other fruits - simple circle
-      nextCtx.beginPath(); 
-      nextCtx.arc(0, 0, r, 0, Math.PI*2);
-      nextCtx.fillStyle = ft.color; 
+      nextCtx.beginPath();
+      nextCtx.arc(0, 0, r, 0, Math.PI * 2);
+      nextCtx.fillStyle = ft.color;
       nextCtx.fill();
     }
-    
-    nextCtx.font = `${r*1.2}px "Segoe UI Emoji","Apple Color Emoji"`;
-    nextCtx.textAlign = 'center'; nextCtx.textBaseline = 'middle';
-    nextCtx.fillStyle = '#fff2d0'; nextCtx.shadowBlur = 3;
+
+    nextCtx.font = `${r * 1.2}px "Segoe UI Emoji","Apple Color Emoji"`;
+    nextCtx.textAlign = 'center';
+    nextCtx.textBaseline = 'middle';
+    nextCtx.fillStyle = '#fff2d0';
+    nextCtx.shadowBlur = 3;
     nextCtx.fillText(ft.emoji, 0, 2);
     nextCtx.restore();
   }
 
-  function spawnFruit(x) {
-    if(isactivityOver||!canDrop) return;
-    const ft = FRUIT_TYPES[currentFruitType];
-    const ftRad = ft.radius;
-    const spawnX = Math.max(ftRad, Math.min(CANVAS_W-ftRad,x));
-    const f = makeFruit(spawnX, 30, currentFruitType);
-    
-    // Check if spawn position is blocked by existing fruit
-    for (let existing of fruits) {
-      let dx = f.x - existing.x;
-      let dy = f.y - existing.y;
-      let dist = Math.sqrt(dx*dx + dy*dy);
-      let minDist = f.radius + existing.radius;
-      if (dist < minDist) {
-        // Fruit pile too high - trigger game over
-        if (!isactivityOver) triggeractivityOver();
-        return;
-      }
-    }
-    
-    f.vy = 0.4;
-    f.vx = 0;
-    fruits.push(f);
-    currentFruitType = nextFruitType;
-    pickNext();
-    canDrop = false; dropCooldown = 36;
-    spawnParticles(spawnX, 32, FRUIT_TYPES[currentFruitType].color, 5);
-  }
-
-  function spawnParticles(x, y, color, count=10) {
-    for(let i=0;i<count;i++){
-      let angle = Math.random()*Math.PI*2, speed = 1+Math.random()*3;
-      particles.push({ x, y, vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed-1.2, life: 0.9, decay: 0.03+Math.random()*0.04, radius: 2+Math.random()*5, color });
-    }
-  }
-
-  function spawnMergeEffect(x, y, radius, color, fruitTypeIndex) {
-    mergeEffects.push({ x, y, radius, maxR: radius*2.3, color, life: 1 });
-    for(let s=0;s<14;s++){
-      let ang = Math.random()*Math.PI*2, radSpd = 1.5+Math.random()*4;
-      particles.push({ x, y, vx: Math.cos(ang)*radSpd, vy: Math.sin(ang)*radSpd-1, life: 0.85, decay: 0.035, radius: 2+Math.random()*4, color: '#FFD966' });
-    }
-    gentleShake = (fruitTypeIndex >= 7) ? 3.5 : 0;
-  }
-
-  function getFruitCollisionRadius(fruit) {
-    if (fruit.type === 1) return fruit.radius * 0.92;
-    if (fruit.type === 2) return fruit.radius * 0.94;
-    return fruit.radius;
-  }
-
-  function wakeFruit(fruit) {
-    fruit.sleeping = false;
-    fruit.restFrames = 0;
-  }
-
-  function isFruitSupported(fruit) {
-    const radius = getFruitCollisionRadius(fruit);
-    if (fruit.y + radius >= FLOOR - 0.5) return true;
-
-    for (let other of fruits) {
-      if (other.id === fruit.id || other.merging) continue;
-
-      const otherRadius = getFruitCollisionRadius(other);
-      const dx = other.x - fruit.x;
-      const dy = other.y - fruit.y;
-      const touching = Math.hypot(dx, dy) <= radius + otherRadius + 1.5;
-      const below = dy > Math.abs(dx) * 0.2 && dy > 0;
-
-      if (touching && below) return true;
-    }
-
-    return false;
-  }
-
-  function updateSleepState() {
-    for (let fruit of fruits) {
-      if (fruit.merging) continue;
-
-      const supported = isFruitSupported(fruit);
-      const slowEnough =
-        Math.abs(fruit.vx) < REST_SPEED_X &&
-        Math.abs(fruit.vy) < REST_SPEED_Y &&
-        Math.abs(fruit.va) < REST_ANGULAR_SPEED &&
-        supported;
-
-      if (slowEnough) {
-        fruit.restFrames++;
-        if (fruit.restFrames >= REST_FRAMES_REQUIRED) {
-          fruit.sleeping = true;
-          fruit.vx = 0;
-          fruit.vy = 0;
-          fruit.va = 0;
-        }
-      } else {
-        fruit.restFrames = 0;
-        if (Math.abs(fruit.vx) > WAKE_SPEED || Math.abs(fruit.vy) > WAKE_SPEED) {
-          fruit.sleeping = false;
-        }
-      }
-    }
-  }
-
- function applyPhysics() {
-    const stepGravity = GRAVITY / PHYSICS_SUBSTEPS;
-
-    for (let substep = 0; substep < PHYSICS_SUBSTEPS; substep++) {
-      for (let fruit of fruits) {
-        if (fruit.merging || fruit.sleeping) continue;
-
-        fruit.vy += stepGravity;
-        fruit.x += fruit.vx / PHYSICS_SUBSTEPS;
-        fruit.y += fruit.vy / PHYSICS_SUBSTEPS;
-
-        if (!isFinite(fruit.x)) fruit.x = CANVAS_W / 2;
-        if (!isFinite(fruit.y)) fruit.y = 100;
-        if (!isFinite(fruit.vx)) fruit.vx = 0;
-        if (!isFinite(fruit.vy)) fruit.vy = 0;
-
-        fruit.vx *= AIR_DRAG;
-        fruit.vy *= AIR_DRAG;
-        fruit.va *= 0.94;
-        fruit.angle += fruit.va;
-      }
-
-      solveBoundaries();
-      solveFruitCollisions();
-    }
-
-    updateSleepState();
-  }
-
-  function solveBoundaries() {
-    for (let fruit of fruits) {
-      if (fruit.merging) continue;
-
-      const radius = getFruitCollisionRadius(fruit);
-
-      if (fruit.y + radius > FLOOR) {
-        fruit.y = FLOOR - radius;
-        if (fruit.vy > 0) fruit.vy *= -FRUIT_BOUNCE;
-        if (Math.abs(fruit.vy) < 0.08) fruit.vy = 0;
-        fruit.vx *= GROUND_DRAG;
-        if (Math.abs(fruit.vx) < 0.025) fruit.vx = 0;
-      }
-
-      if (fruit.x - radius < 0) {
-        fruit.x = radius;
-        if (fruit.vx < 0) fruit.vx *= -WALL_BOUNCE;
-        wakeFruit(fruit);
-      }
-
-      if (fruit.x + radius > CANVAS_W) {
-        fruit.x = CANVAS_W - radius;
-        if (fruit.vx > 0) fruit.vx *= -WALL_BOUNCE;
-        wakeFruit(fruit);
-      }
-    }
-  }
-
-  function solveFruitCollisions() {
-    for (let i = 0; i < fruits.length; i++) {
-      for (let j = i + 1; j < fruits.length; j++) {
-        const a = fruits[i];
-        const b = fruits[j];
-        if (a.merging || b.merging) continue;
-
-        const radiusA = getFruitCollisionRadius(a);
-        const radiusB = getFruitCollisionRadius(b);
-        let dx = b.x - a.x;
-        let dy = b.y - a.y;
-        let distSq = dx * dx + dy * dy;
-        const minDist = radiusA + radiusB;
-
-        if (distSq === 0) {
-          dx = 0.001;
-          dy = 0;
-          distSq = dx * dx;
-        }
-
-        if (distSq >= minDist * minDist) continue;
-
-        const dist = Math.sqrt(distSq);
-        const nx = dx / dist;
-        const ny = dy / dist;
-        const invMassA = 1 / a.mass;
-        const invMassB = 1 / b.mass;
-        const totalInvMass = invMassA + invMassB;
-        const overlap = minDist - dist;
-        const correction = Math.max(overlap - POSITION_SLOP, 0) * POSITION_BIAS;
-
-        a.x -= nx * correction * (invMassA / totalInvMass);
-        a.y -= ny * correction * (invMassA / totalInvMass);
-        b.x += nx * correction * (invMassB / totalInvMass);
-        b.y += ny * correction * (invMassB / totalInvMass);
-
-        const rvx = b.vx - a.vx;
-        const rvy = b.vy - a.vy;
-        const velAlongNormal = rvx * nx + rvy * ny;
-
-        if (velAlongNormal < 0) {
-          const impulseMagnitude = -(1 + FRUIT_BOUNCE) * velAlongNormal / totalInvMass;
-          const impulseX = impulseMagnitude * nx;
-          const impulseY = impulseMagnitude * ny;
-
-          a.vx -= impulseX * invMassA;
-          a.vy -= impulseY * invMassA;
-          b.vx += impulseX * invMassB;
-          b.vy += impulseY * invMassB;
-
-          const tangentX = rvx - velAlongNormal * nx;
-          const tangentY = rvy - velAlongNormal * ny;
-          const tangentLength = Math.hypot(tangentX, tangentY);
-
-          if (tangentLength > 0.0001) {
-            const tx = tangentX / tangentLength;
-            const ty = tangentY / tangentLength;
-            let frictionImpulse = -(rvx * tx + rvy * ty) / totalInvMass;
-            const maxFriction = impulseMagnitude * COLLISION_FRICTION;
-            frictionImpulse = Math.max(-maxFriction, Math.min(maxFriction, frictionImpulse));
-
-            a.vx -= frictionImpulse * tx * invMassA;
-            a.vy -= frictionImpulse * ty * invMassA;
-            b.vx += frictionImpulse * tx * invMassB;
-            b.vy += frictionImpulse * ty * invMassB;
-          }
-
-          if (Math.abs(impulseX) + Math.abs(impulseY) > WAKE_SPEED) {
-            wakeFruit(a);
-            wakeFruit(b);
-          }
-        }
-
-        a.mergeCooldown = Math.max(0, a.mergeCooldown - 1);
-        b.mergeCooldown = Math.max(0, b.mergeCooldown - 1);
-      }
-    }
-  }
-
-
-  function handleMerges() {
-    let remove=new Set(), toAdd=[];
-    for(let i=0;i<fruits.length;i++){
-      for(let j=i+1;j<fruits.length;j++){
-        let a=fruits[i], b=fruits[j];
-        if(remove.has(a.id)||remove.has(b.id)||a.merging||b.merging) continue;
-        if(a.type!==b.type||a.type>=FRUIT_TYPES.length-1) continue;
-        if (a.mergeCooldown > 0 || b.mergeCooldown > 0) continue;
-
-        const radiusA = getFruitCollisionRadius(a);
-        const radiusB = getFruitCollisionRadius(b);
-        const relativeSpeed = Math.hypot(b.vx - a.vx, b.vy - a.vy);
-        const mergeDistance = radiusA + radiusB + MERGE_DISTANCE_BONUS;
-
-        if(relativeSpeed <= MERGE_SPEED_LIMIT && Math.hypot(b.x-a.x,b.y-a.y) < mergeDistance){
-          remove.add(a.id); remove.add(b.id);
-          let mx=(a.x+b.x)/2, my=(a.y+b.y)/2, newType=a.type+1;
-          let nf=makeFruit(mx,my,newType); nf.vy=-1.1; nf.vx=(a.vx+b.vx)*0.18; nf.scale=0.5; nf.scaleTarget=1;
-          toAdd.push(nf);
-          spawnParticles(mx,my,FRUIT_TYPES[newType].color,18);
-          spawnMergeEffect(mx,my,FRUIT_TYPES[newType].radius,FRUIT_TYPES[newType].color,newType);
-          updateScore(FRUIT_TYPES[newType].points);
-        }
-      }
-    }
-    if(remove.size){ fruits=fruits.filter(f=>!remove.has(f.id)); fruits.push(...toAdd); }
-  }
-
-  function checkactivityOver() {
-    if(isactivityOver) return;
-    let hasSettledFruit = false;
-    for(let f of fruits){
-      if(!f.merging && f.y-f.radius < WALL_TOP && Math.abs(f.vy) < 1.3){
-        activityOverTimer++;
-        if(activityOverTimer > 55) {
-          triggeractivityOver();
-        }
-        hasSettledFruit = true;
-        break;
-      }
-    }
-    if(!hasSettledFruit) {
-      activityOverTimer = Math.max(0, activityOverTimer - 1); // Slowly decay timer
-    }
-  }
-
-  function triggeractivityOver() {
-    if(isactivityOver) return;
-    isactivityOver=true; finalScoreEl.textContent=score;
-    overlay.style.display='flex'; dropIndicatorDiv.style.display='none';
-  }
-
-  document.getElementById('restart-btn').addEventListener('click', () => {
-    if (isactivityOver) {
-      fruits = [];
-      score = 0;
-      scoreEl.textContent = '0';
-      isactivityOver = false;
-      activityOverTimer = 0;
-      canDrop = true;
-      dropCooldown = 0;
-      particles = [];
-      mergeEffects = [];
-      gentleShake = 0;
-      comboFlash = 0;
-      overlay.style.display = 'none';
-      currentFruitType = randomDropType();
-      pickNext();
-    }
-  }, { once: false });
-  
-  // Prevent clicking behind overlay
-  overlay.addEventListener('click', (e) => {
-    if (e.target === overlay) e.stopPropagation();
-  });
-
-  function updateDashedLine(clientX) {
-    const rect=canvas.getBoundingClientRect();
-    let offsetX=clientX-rect.left;
-    if(offsetX>=0&&offsetX<=rect.width){ dropIndicatorDiv.style.display='block'; dropIndicatorDiv.style.left=`${offsetX}px`; }
-    else dropIndicatorDiv.style.display='none';
-  }
-
-  canvas.addEventListener('mousemove', e => { const rect=canvas.getBoundingClientRect(); mouseX=(e.clientX-rect.left)*(CANVAS_W/rect.width); updateDashedLine(e.clientX); });
-  canvas.addEventListener('mouseleave', () => dropIndicatorDiv.style.display='none');
-  canvas.addEventListener('click', e => { const rect=canvas.getBoundingClientRect(); spawnFruit((e.clientX-rect.left)*(CANVAS_W/rect.width)); });
-  canvas.addEventListener('touchmove', e => { e.preventDefault(); const rect=canvas.getBoundingClientRect(); mouseX=(e.touches[0].clientX-rect.left)*(CANVAS_W/rect.width); updateDashedLine(e.touches[0].clientX); }, {passive:false});
-  canvas.addEventListener('touchend', e => { e.preventDefault(); const rect=canvas.getBoundingClientRect(); spawnFruit((e.changedTouches[0].clientX-rect.left)*(CANVAS_W/rect.width)); dropIndicatorDiv.style.display='none'; });
-
   function drawBackground() {
-    ctx.fillStyle='#fef085'; ctx.fillRect(0,0,CANVAS_W,CANVAS_H);
-    ctx.fillStyle='#e6c458'; ctx.globalAlpha=0.25;
-    ctx.fillRect(0,0,CANVAS_W,8); ctx.fillRect(0,CANVAS_H-12,CANVAS_W,12);
-    ctx.fillRect(0,0,6,CANVAS_H); ctx.fillRect(CANVAS_W-6,0,6,CANVAS_H);
-    ctx.globalAlpha=1; ctx.fillStyle='#d4a24e'; ctx.globalAlpha=0.4;
-    ctx.fillRect(0,WALL_TOP-2,CANVAS_W,3); ctx.globalAlpha=1;
+    ctx.fillStyle = '#fef085';
+    ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
+    ctx.fillStyle = '#e6c458';
+    ctx.globalAlpha = 0.25;
+    ctx.fillRect(0, 0, CANVAS_W, 8);
+    ctx.fillRect(0, CANVAS_H - 12, CANVAS_W, 12);
+    ctx.fillRect(0, 0, 6, CANVAS_H);
+    ctx.fillRect(CANVAS_W - 6, 0, 6, CANVAS_H);
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = '#d4a24e';
+    ctx.globalAlpha = 0.4;
+    ctx.fillRect(0, WALL_TOP_PX - 2, CANVAS_W, 3);
+    ctx.globalAlpha = 1;
   }
 
   function drawDropGuide() {
-    if(isactivityOver||!canDrop) return;
-    let ft=FRUIT_TYPES[currentFruitType];
-    let cx=Math.max(ft.radius,Math.min(CANVAS_W-ft.radius,mouseX));
-    ctx.save(); 
-    ctx.globalAlpha=0.5;
+    if (isActivityOver || !canDrop) return;
+    const ft = FRUIT_TYPES[currentFruitType];
+    const cx = Math.max(ft.pixelRadius, Math.min(CANVAS_W - ft.pixelRadius, mouseX));
+    ctx.save();
+    ctx.globalAlpha = 0.5;
     ctx.translate(cx, 28);
-    
-    // Draw shape based on fruit type
-    if (currentFruitType === 1) {
-      // Strawberry
-      drawStrawberryShape(ctx, ft.radius, ft.color);
-    } else if (currentFruitType === 2) {
-      // Grape
-      drawGrapeCloudShape(ctx, ft.radius, ft.color);
+
+    if (currentFruitType === 2) {
+      drawGrapeCloudShape(ctx, ft.pixelRadius, ft.color);
+    } else if (currentFruitType === 3) {
+      drawStrawberryShape(ctx, ft.pixelRadius, ft.color);
     } else {
-      // Other fruits - circle
-      ctx.beginPath(); 
-      ctx.arc(0, 0, ft.radius, 0, Math.PI*2); 
-      ctx.fillStyle=ft.color; 
+      ctx.beginPath();
+      ctx.arc(0, 0, ft.pixelRadius, 0, Math.PI * 2);
+      ctx.fillStyle = ft.color;
       ctx.fill();
     }
-    
+
     ctx.globalAlpha = 1;
-    ctx.font=`${ft.radius*1.2}px "Segoe UI Emoji","Apple Color Emoji"`;
-    ctx.textAlign='center'; 
-    ctx.textBaseline='middle'; 
-    ctx.fillStyle='#fff3cf'; 
-    ctx.shadowBlur=5;
-    ctx.fillText(ft.emoji, 0, 2); 
+    ctx.font = `${ft.pixelRadius * 1.2}px "Segoe UI Emoji","Apple Color Emoji"`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#fff3cf';
+    ctx.shadowBlur = 5;
+    ctx.fillText(ft.emoji, 0, 2);
     ctx.restore();
   }
 
   function drawFruits() {
-    for(let f of fruits){
-      if(f.merging) continue;
-      if(f.scale < f.scaleTarget) f.scale = Math.min(f.scaleTarget, f.scale + 0.09);
-      
-      let ft = FRUIT_TYPES[f.type];
-      
-      ctx.save(); 
-      ctx.translate(f.x, f.y); 
-      ctx.rotate(f.angle); 
+    for (const f of fruitRenderStates) {
+      if (f.scale < f.scaleTarget) {
+        f.scale = Math.min(f.scaleTarget, f.scale + 0.09);
+      }
+
+      const ft = FRUIT_TYPES[f.fruitIndex];
+
+      ctx.save();
+      ctx.translate(f.x, f.y);
+      ctx.rotate(f.rotation);
       ctx.scale(f.scale, f.scale);
-      
-      ctx.shadowBlur = 8; ctx.shadowColor = ft.color;
-      
-      // Draw shape based on fruit type
-      if (f.type === 1) {
-        // Strawberry - soft triangle shape
-        drawStrawberryShape(ctx, f.radius, ft.color);
-      } else if (f.type === 2) {
-        // Grape - bumpy cloud shape
-        drawGrapeCloudShape(ctx, f.radius, ft.color);
+
+      ctx.shadowBlur = 8;
+      ctx.shadowColor = ft.color;
+
+      if (f.fruitIndex === 2) {
+        drawGrapeCloudShape(ctx, f.pixelRadius, ft.color);
+      } else if (f.fruitIndex === 3) {
+        drawStrawberryShape(ctx, f.pixelRadius, ft.color);
       } else {
-        // Other fruits - simple circle
-        ctx.beginPath(); 
-        ctx.arc(0, 0, f.radius, 0, Math.PI*2); 
-        ctx.fillStyle = ft.color; 
+        ctx.beginPath();
+        ctx.arc(0, 0, f.pixelRadius, 0, Math.PI * 2);
+        ctx.fillStyle = ft.color;
         ctx.fill();
       }
-      
-      // Draw shiny highlight
-      ctx.beginPath(); 
-      ctx.arc(-f.radius*0.2, -f.radius*0.2, f.radius*0.2, 0, Math.PI*2);
-      ctx.fillStyle = 'rgba(255,250,210,0.4)'; 
+
+      ctx.beginPath();
+      ctx.arc(-f.pixelRadius * 0.2, -f.pixelRadius * 0.2, f.pixelRadius * 0.2, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,250,210,0.4)';
       ctx.fill();
-      
-      // Draw emoji
-      ctx.font = `${f.radius*1.15}px "Segoe UI Emoji","Apple Color Emoji"`;
-      ctx.textAlign = 'center'; 
-      ctx.textBaseline = 'middle'; 
-      ctx.fillStyle = '#fff8e7'; 
+
+      ctx.font = `${f.pixelRadius * 1.15}px "Segoe UI Emoji","Apple Color Emoji"`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#fff8e7';
       ctx.shadowBlur = 4;
-      ctx.fillText(ft.emoji, 0, 2); 
-      
+      ctx.fillText(ft.emoji, 0, 2);
+
       ctx.restore();
     }
   }
+
   function drawParticlesAndEffects() {
-    for(let p of particles){
-      ctx.save(); ctx.globalAlpha=p.life;
-      ctx.beginPath(); ctx.arc(p.x,p.y,p.radius*p.life,0,Math.PI*2);
-      ctx.fillStyle=p.color; ctx.fill(); ctx.restore();
-      p.x+=p.vx; p.y+=p.vy; p.vy+=0.12; p.life-=p.decay;
+    for (const p of particles) {
+      ctx.save();
+      ctx.globalAlpha = p.life;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius * p.life, 0, Math.PI * 2);
+      ctx.fillStyle = p.color;
+      ctx.fill();
+      ctx.restore();
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += 0.12;
+      p.life -= p.decay;
     }
-    particles=particles.filter(p=>p.life>0);
-    for(let e of mergeEffects){
-      ctx.save(); ctx.globalAlpha=e.life*0.85;
-      ctx.beginPath(); ctx.arc(e.x,e.y,e.radius+(e.maxR-e.radius)*(1-e.life),0,Math.PI*2);
-      ctx.strokeStyle=e.color; ctx.lineWidth=4*e.life; ctx.stroke(); ctx.restore();
-      e.life-=0.045;
+    particles = particles.filter(p => p.life > 0);
+
+    for (const e of mergeEffects) {
+      ctx.save();
+      ctx.globalAlpha = e.life * 0.85;
+      ctx.beginPath();
+      ctx.arc(e.x, e.y, e.radius + (e.maxR - e.radius) * (1 - e.life), 0, Math.PI * 2);
+      ctx.strokeStyle = e.color;
+      ctx.lineWidth = 4 * e.life;
+      ctx.stroke();
+      ctx.restore();
+      e.life -= 0.045;
     }
-    mergeEffects=mergeEffects.filter(e=>e.life>0);
+    mergeEffects = mergeEffects.filter(e => e.life > 0);
   }
 
   function applyGentleShake() {
-    if(gentleShake>0){ canvas.style.transform=`translate(${(Math.random()-0.5)*gentleShake}px,${(Math.random()-0.5)*gentleShake*0.6}px)`; gentleShake-=0.25; }
-    else canvas.style.transform='';
+    if (gentleShake > 0) {
+      canvas.style.transform = `translate(${(Math.random() - 0.5) * gentleShake}px, ${(Math.random() - 0.5) * gentleShake * 0.6}px)`;
+      gentleShake -= 0.25;
+    } else {
+      canvas.style.transform = '';
+    }
   }
+
+  function updateDashedLine(clientX) {
+    const rect = canvas.getBoundingClientRect();
+    const offsetX = clientX - rect.left;
+    if (offsetX >= 0 && offsetX <= rect.width) {
+      dropIndicatorDiv.style.display = 'block';
+      dropIndicatorDiv.style.left = `${offsetX}px`;
+    } else {
+      dropIndicatorDiv.style.display = 'none';
+    }
+  }
+
+  canvas.addEventListener('mousemove', e => {
+    const rect = canvas.getBoundingClientRect();
+    mouseX = (e.clientX - rect.left) * (CANVAS_W / rect.width);
+    updateDashedLine(e.clientX);
+  });
+
+  canvas.addEventListener('mouseleave', () => {
+    dropIndicatorDiv.style.display = 'none';
+  });
+
+  canvas.addEventListener('click', e => {
+    const rect = canvas.getBoundingClientRect();
+    spawnFruit((e.clientX - rect.left) * (CANVAS_W / rect.width));
+  });
+
+  canvas.addEventListener('touchmove', e => {
+    e.preventDefault();
+    const rect = canvas.getBoundingClientRect();
+    mouseX = (e.touches[0].clientX - rect.left) * (CANVAS_W / rect.width);
+    updateDashedLine(e.touches[0].clientX);
+  }, { passive: false });
+
+  canvas.addEventListener('touchend', e => {
+    e.preventDefault();
+    const rect = canvas.getBoundingClientRect();
+    spawnFruit((e.changedTouches[0].clientX - rect.left) * (CANVAS_W / rect.width));
+    dropIndicatorDiv.style.display = 'none';
+  });
+
+  document.getElementById('restart-btn').addEventListener('click', () => {
+    if (!isActivityOver) return;
+
+    // Destroy physics world and recreate
+    for (const fruit of fruits) {
+      fruit.destroy();
+    }
+    fruits = [];
+    fruitRenderStates = [];
+
+    // FIX 5: Recreate the physics world fully on restart
+    colliderMap.clear();
+    physicsWorld.free();
+    eventQueue.free();
+
+    const gravity = new RAPIER.Vector2(0.0, GRAVITY);
+    physicsWorld = new RAPIER.World(gravity);
+    physicsWorld.integrationParameters.numSolverIterations = SOLVER_ITERATIONS;
+    eventQueue = new RAPIER.EventQueue(true);
+    createWalls();
+
+    score = 0;
+    scoreEl.textContent = '0';
+    isActivityOver = false;
+    canDrop = true;
+    dropCooldown = 0;
+    particles = [];
+    mergeEffects = [];
+    gentleShake = 0;
+    comboFlash = 0;
+    overlay.style.display = 'none';
+
+    currentFruitType = randomDropType();
+    pickNext();
+  });
+
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) e.stopPropagation();
+  });
 
   function activityLoop() {
     drawBackground();
-    if(!isactivityOver){ applyPhysics(); handleCollisions(); handleMerges(); checkactivityOver(); if(dropCooldown>0){ dropCooldown--; if(dropCooldown===0) canDrop=true; } }
-    drawFruits(); drawDropGuide(); drawParticlesAndEffects();
-    if(comboFlash>0){ ctx.fillStyle='rgba(255,245,180,0.12)'; ctx.fillRect(0,0,CANVAS_W,CANVAS_H); comboFlash--; }
+
+    if (!isActivityOver && physicsWorld && eventQueue) {
+      physicsWorld.step(eventQueue);
+      handleCollisionEvents();
+      syncFruitsToRenderState();
+      checkActivityOver();
+
+      if (dropCooldown > 0) {
+        dropCooldown--;
+        if (dropCooldown === 0) canDrop = true;
+      }
+    }
+
+    drawFruits();
+    drawDropGuide();
+    drawParticlesAndEffects();
+
+    if (comboFlash > 0) {
+      ctx.fillStyle = 'rgba(255,245,180,0.12)';
+      ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
+      comboFlash--;
+    }
+
     applyGentleShake();
     requestAnimationFrame(activityLoop);
   }
 
-  currentFruitType = randomDropType();
-  pickNext();
-  
-  // Prevent accidental page reloads
-  window.addEventListener('beforeunload', (e) => {
-    if (fruits.length > 0) {
-      e.preventDefault();
-      e.returnValue = '';
-    }
-  });
-  
-  // Global error handler
   window.addEventListener('error', (e) => {
     console.error('Game error:', e.error);
   });
-  
-  // Prevent double-click reload (sometimes happens on macOS)
+
   document.addEventListener('dblclick', (e) => {
-    if (e.target === canvas) {
-      e.preventDefault();
-    }
+    if (e.target === canvas) e.preventDefault();
   });
-  
-  activityLoop();
+
+  initPhysics();
 </script>
 </body>
 </html>

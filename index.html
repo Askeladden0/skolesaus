@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Skolesaus er pedagogiske interaktive spill for norske skoleelever. Spill Kloss Spreng, Fruktspleis, 2048 og lær gjennom morsom gaming.">
+    <meta name="description" content="Skolesaus er pedagogiske interaktive aktiviteter for norske skoleelever. Prøv Kloss Spreng, Fruktspleis, 2048 og lær gjennom morsom gaming.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://skolesaus.no/">
     <meta property="og:title" content="Skolesaus – Interaktive aktiviteter i skoletiden">
-    <meta property="og:description" content="Pedagogiske og morsom spill for norske skoleelever. Kombinér, spreng og lær med Skolesaus.">
+    <meta property="og:description" content="Pedagogiske og morsom aktiviteter for norske skoleelever. Kombinér, spreng og lær med Skolesaus.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://skolesaus.no/">
     <meta property="og:image" content="https://skolesaus.no/kloss_banner.png">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Skolesaus – Interaktive aktiviteter i skoletiden">
-    <meta name="twitter:description" content="Pedagogiske og morsom spill for norske skoleelever.">
+    <meta name="twitter:description" content="Pedagogiske og morsomme aktiviteter for norske skoleelever.">
     <meta name="twitter:image" content="https://skolesaus.no/kloss_banner.png">
     <title>Skolesaus – Interaktive aktiviteter i skoletiden</title>
+    <script defer src="https://cloud.umami.is/script.js" data-website-id="d2502540-672d-4c76-b529-f7b095709c7b"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Georgia&family=Lato:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <script>
@@ -204,7 +205,7 @@
             transition: filter 0.3s ease;
         }
 
-        .activity-card:hover .activity-img-wrap img { filter: brightness(1.3) contrast(1.05); }
+        .activity-card:hover .activity-img-wrap img { filter: brightness(0.6); }
 
         .activity-tag {
             position: absolute;
@@ -234,30 +235,33 @@
         .activity-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.65; }
 
         .play-btn-wrap {
-            overflow: hidden;
-            max-height: 0; opacity: 0;
-            transition: max-height 0.25s ease, opacity 0.2s ease, margin-top 0.25s ease;
-            margin-top: 0;
+            position: absolute;
+            top: 35%; left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0; 
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 10;
         }
 
-        .activity-card:hover .play-btn-wrap { max-height: 60px; opacity: 1; margin-top: 1rem; }
+        .activity-card:hover .play-btn-wrap { opacity: 1; pointer-events: auto; }
 
         .play-btn {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            font-size: 0.82rem;
+            font-size: 0.95rem;
             font-weight: 700;
             color: #000;
             background: var(--accent);
-            padding: 0.5rem 1.2rem;
+            padding: 0.75rem 4rem;
             border-radius: 4px;
             font-family: var(--font-body);
             transition: opacity 0.15s;
             cursor: pointer;
         }
 
-        .play-btn:hover { opacity: 0.85; }
+        .play-btn:hover { background-color: #2cffce;}
         .play-btn::after { content: '→'; }
 
         .play-btn.coming-soon {
@@ -313,7 +317,7 @@
       "@context": "https://schema.org",
       "@type": "Organization",
       "name": "Skolesaus",
-      "description": "Pedagogiske interaktive spill for norske skoleelever",
+      "description": "Pedagogiske interaktive aktiviteter for norske skoleelever",
       "url": "https://skolesaus.no",
       "logo": "https://skolesaus.no/logo.png",
       "sameAs": ["https://www.tiktok.com/@snorresaus"]
@@ -338,6 +342,7 @@
 <section class="hero">
     <div class="hero-bg"></div>
     <div class="hero-content">
+        <h3>S K O L E S A U S</h3>
         <h1>Kloss Spreng</h1>
         <h2>Lag rekker og rader med klosser, så de sprenger.</h2>
         <div class="hero-btns">
@@ -358,12 +363,12 @@
 
         <article class="activity-card" itemscope itemtype="https://schema.org/EducationalGame">
             <div class="activity-img-wrap">
-                <img src="skolesaus-main/images/melon.jpg" alt="Fruktspleis - Kombinér og sples frukter sammen">
+                <img src="skolesaus-main/images/melon.jpg" alt="Fruktspleis - Kombinér og spleis frukter sammen">
                 <span class="activity-tag">Nytt</span>
             </div>
             <div class="activity-info">
                 <h3 class="activity-title" itemprop="name">Fruktspleis</h3>
-                <p class="activity-desc" itemprop="description">Kombinér frukter for å spleise dem sammen til nye variasjoner. Planlegg strategisk og oppnå høyere poengsum i dette morsom og utfordrende puslespillet.</p>
+                <p class="activity-desc" itemprop="description">Kombinér frukter for å spleise dem sammen til nye variasjoner. Planlegg strategisk og oppnå høyere poengsum i denne morsomme og utfordrende aktiviteten</p>
                 <div class="play-btn-wrap">
                     <a href="fruktspleis.html" class="play-btn activity-link">Start</a>
                 </div>
@@ -372,12 +377,12 @@
 
         <article class="activity-card" itemscope itemtype="https://schema.org/EducationalGame">
             <div class="activity-img-wrap">
-                <img src="kloss.png" alt="Kloss Spreng - Puslespillspill med blokker">
+                <img src="kloss.png" alt="Kloss Spreng - Pusling med blokker">
                 <span class="activity-tag">Snorres favoritt</span>
             </div>
             <div class="activity-info">
                 <h3 class="activity-title" itemprop="name">Kloss Spreng</h3>
-                <p class="activity-desc" itemprop="description">Spreng blokker ved å danne fullstendige rader og kolonner. Et tilforlatelig puslespill som tester strategisk tenkning og planlegging.</p>
+                <p class="activity-desc" itemprop="description">Spreng blokker ved å danne fullstendige rader og kolonner. Et tilforlatelig aktivitet som tester strategisk tenkning og planlegging.</p>
                 <div class="play-btn-wrap">
                     <a href="kloss_spreng.html" class="play-btn activity-link">Start</a>
                 </div>
@@ -390,7 +395,7 @@
             </div>
             <div class="activity-info">
                 <h3 class="activity-title" itemprop="name">2048</h3>
-                <p class="activity-desc" itemprop="description">Kombinér tall for å nå 2048. Utvikl mattenkingen din og øv på tallkombinering gjennom et engasjerende puslespill.</p>
+                <p class="activity-desc" itemprop="description">Kombinér tall for å nå 2048. Utvikl mattenkingen din og øv på tallkombinering gjennom en engasjerende aktivitet.</p>
                 <div class="play-btn-wrap">
                     <a href="tallkombo.html" class="play-btn activity-link">Start</a>
                 </div>
@@ -409,7 +414,7 @@
     <div class="footer-col">
         <h4>Navigasjon</h4>
         <ul>
-            <li><a href="#aktiviteter">Alle spill</a></li>
+            <li><a href="#aktiviteter">Alle aktiviteter</a></li>
             <li><a href="personvern.html">Personvern & cookies</a></li>
         </ul>
     </div>
