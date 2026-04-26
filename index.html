@@ -14,7 +14,6 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Skolesaus – Interaktive aktiviteter i skoletiden">
     <meta name="twitter:description" content="Pedagogiske og morsomme aktiviteter for norske skoleelever.">
-    <meta name="twitter:image" content="https://skolesaus.no/kloss_banner.png">
     <title>Skolesaus – Interaktive aktiviteter i skoletiden</title>
     <script defer src="https://cloud.umami.is/script.js" data-website-id="d2502540-672d-4c76-b529-f7b095709c7b"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -80,7 +79,7 @@
 
         /* ─── HERO ─── */
         .hero {
-            min-height: 72vh;
+            min-height: 50vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -344,17 +343,46 @@
     <div class="hero-content">
         
         <h1>SKOLESAUS</h1>
-        <h2>Driv med interaktive aktiviteter på skolen.</h2>
+        <h2>Gjør skolehverdagen din enklere</h2>
         <div class="hero-btns">
-            <a href="#aktiviteter" class="btn-secondary">Se alle aktiviteter</a>
+            <a href="nynorsk.html" class="btn-primary">Nynorsk-oversetter</a>
+            <a href="#aktiviteter" class="btn-secondary">Se aktiviteter</a>
         </div>
     </div>
 </section>
 
 <!-- ─── activities SECTION ─── -->
 <section class="activities-section" id="aktiviteter">
+
+
+<div>
+
     <div class="section-header">
-        <h2 class="section-title">Våre <span>aktiviteter</span></h2>
+        <h2 class="section-title">Mine <span>tilbud</span></h2>
+        <p class="section-sub">Gjør skolehverdagen din enklere</p>
+    <br>
+        <div class="activity-grid">
+
+           <article class="activity-card" itemscope itemtype="https://schema.org/EducationalGame">
+            <div class="activity-img-wrap">
+                <img src="https://image.forskning.no/117321.webp?imageId=117321&width=2116&height=1208&format=webp" alt="Klasserom">
+            </div>
+            <div class="activity-info">
+                <h3 class="activity-title" itemprop="name">Nynorsk-oversetter</h3>
+                <p class="activity-desc" itemprop="description">Oversett tekst fra bokmål til nynorsk automatisk</p>
+                <div class="play-btn-wrap">
+                    <a href="nynorsk.html" class="play-btn activity-link">Start</a>
+                </div>
+            </div>
+        </article>
+
+        
+
+    </div>
+    </div>
+<br><br>
+    <div class="section-header">
+        <h2 class="section-title">Mine <span>aktiviteter</span></h2>
         <p class="section-sub">For barneskole, ungdomsskole og VGS</p>
     </div>
 
@@ -402,8 +430,9 @@
         </article>
 
     </div>
-</section>
 
+
+</section>
 <!-- ─── FOOTER ─── -->
 <footer>
     <div class="footer-brand">

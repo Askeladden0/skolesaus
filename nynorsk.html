@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="En enkel nynorsk-oversetter for å hjelpe deg med å oversette tekst til nynorsk.">
+    <meta name="robots" content="index, follow">
+    <title>Nynorskoversetter - Skolesaus</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #171925;
+            --surface: #161722;
+            --surface2: #2e3047;
+            --accent: #43d4b2;
+            --text: #d4d4d4;
+            --muted: #888;
+            --border: #2a2a2a;
+            --font-body: 'Lato', Arial, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-body);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        a { text-decoration: none; color: inherit; }
+
+        /* ─── HEADER ─── */
+        header {
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg);
+        }
+
+        .logo {
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--accent);
+            letter-spacing: -0.5px;
+        }
+
+        .logo span { color: var(--text); }
+
+        /* ─── MAIN CONTENT ─── */
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            text-align: center;
+            letter-spacing: -0.5px;
+        }
+
+        .intro {
+            text-align: center;
+            color: var(--muted);
+            margin-bottom: 2.5rem;
+            font-size: 0.95rem;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            color: var(--accent);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            letter-spacing: -0.3px;
+        }
+
+        /* ─── GUIDE ─── */
+        .guide {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .guide ol {
+            list-style-position: inside;
+            color: var(--text);
+        }
+
+        .guide ol li {
+            margin-bottom: 0.6rem;
+            line-height: 1.6;
+        }
+
+        .guide ol li strong {
+            color: var(--accent);
+        }
+
+        .guide-tip {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(67, 212, 178, 0.08);
+            border-left: 3px solid var(--accent);
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+
+        /* ─── TABLE ─── */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        thead {
+            background: linear-gradient(90deg, rgba(67, 212, 178, 0.15) 0%, rgba(67, 212, 178, 0.05) 100%);
+            border-bottom: 2px solid var(--accent);
+        }
+
+        th {
+            padding: 1rem 1.2rem;
+            text-align: left;
+            font-weight: 700;
+            color: var(--accent);
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 0.85rem 1.2rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+
+        tbody tr {
+            transition: background-color 0.15s ease;
+        }
+
+      
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        td:first-child {
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        td:last-child {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .note {
+            margin-top: 2rem;
+            padding: 1.2rem;
+            background: rgba(67, 212, 178, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: var(--muted);
+            border-left: 3px solid var(--accent);
+        }
+
+        .note strong {
+            color: var(--accent);
+        }
+
+        /* ─── FOOTER ─── */
+        footer {
+            margin-top: 4rem;
+            border-top: 1px solid var(--border);
+            padding: 2rem 5%;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--muted);
+        }
+
+        @media (max-width: 768px) {
+            main {
+                padding: 2rem 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.2rem;
+            }
+
+            th, td {
+                padding: 0.75rem 0.8rem;
+                font-size: 0.85rem;
+            }
+
+            .table-wrapper {
+                margin: 1rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+
+<main>
+    <h1>Nynorsk-oversetter</h1>
+    <p class="intro">Din praktiske guide for bokmål → nynorsk oversettelse</p>
+
+    <section class="guide">
+        <h2>📋 Hvordan bruker du denne?</h2>
+        <ol>
+            <li>Åpne et Word-dokument</li>
+            <li>Bytt språket til nynorsk</li>
+            <li>Klikk på <strong>Fil</strong></li>
+            <li>Velg <strong>Alternativer</strong></li>
+            <li>Gå til <strong>Korrektur</strong></li>
+            <li>Klikk <strong>Alternativer for autokorrektur</strong></li>
+            <li>Lim inn ordene fra listen under</li>
+        </ol>
+        <div class="guide-tip">
+            💡 <strong>Tipp:</strong> Trykk Windows + Shift for å ha denne nettsiden og Word oppe samtidig!
+        </div>
+    </section>
+
+    <h2>📚 Bokmål ↔ Nynorsk ordliste</h2>
+    
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Bokmål</th>
+                    <th>Nynorsk</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>jeg</td><td>eg</td></tr>
+                <tr><td>ikke</td><td>ikkje</td></tr>
+                <tr><td>en</td><td>ein</td></tr>
+                <tr><td>et</td><td>eit</td></tr>
+                <tr><td>ett</td><td>eitt</td></tr>
+                <tr><td>bare</td><td>berre</td></tr>
+                <tr><td>disse</td><td>desse</td></tr>
+                <tr><td>derfor</td><td>difor</td></tr>
+                <tr><td>annenhver</td><td>annankvar</td></tr>
+                <tr><td>annerledes</td><td>annleis</td></tr>
+                <tr><td>enten</td><td>anten</td></tr>
+                <tr><td>igjen</td><td>att</td></tr>
+                <tr><td>ved siden av</td><td>attmed</td></tr>
+                <tr><td>øye</td><td>auge</td></tr>
+                <tr><td>øyeblikk</td><td>augneblink</td></tr>
+                <tr><td>øst</td><td>aust</td></tr>
+                <tr><td>bilde</td><td>bilete</td></tr>
+                <tr><td>blomst</td><td>blome</td></tr>
+                <tr><td>barn</td><td>born</td></tr>
+                <tr><td>begynne</td><td>byrje</td></tr>
+                <tr><td>drar</td><td>dreg</td></tr>
+                <tr><td>eksempel</td><td>døme</td></tr>
+                <tr><td>da</td><td>då</td></tr>
+                <tr><td>eget</td><td>eige</td></tr>
+                <tr><td>eie</td><td>eige</td></tr>
+                <tr><td>eneste</td><td>einaste</td></tr>
+                <tr><td>enkel</td><td>einskild</td></tr>
+                <tr><td>fremmed</td><td>framand</td></tr>
+                <tr><td>foran</td><td>framfor</td></tr>
+                <tr><td>fremdeles</td><td>framleis</td></tr>
+                <tr><td>fra</td><td>frå</td></tr>
+                <tr><td>først</td><td>fyrst</td></tr>
+                <tr><td>gi</td><td>gje</td></tr>
+                <tr><td>gjøre</td><td>gjere</td></tr>
+                <tr><td>hjem</td><td>heim</td></tr>
+                <tr><td>hjemme</td><td>heime</td></tr>
+                <tr><td>hennes</td><td>hennar</td></tr>
+                <tr><td>hos</td><td>hjå</td></tr>
+                <tr><td>hun</td><td>ho</td></tr>
+                <tr><td>huske</td><td>hugse</td></tr>
+                <tr><td>høy</td><td>høg</td></tr>
+                <tr><td>høyre</td><td>høgre</td></tr>
+                <tr><td>kommer</td><td>kjem</td></tr>
+                <tr><td>kjærlighet</td><td>kjærleik</td></tr>
+                <tr><td>hvor</td><td>kor</td></tr>
+                <tr><td>verken</td><td>korkje</td></tr>
+                <tr><td>hvordan</td><td>korleis</td></tr>
+                <tr><td>hva</td><td>kva</td></tr>
+                <tr><td>hvilken</td><td>kva for ein</td></tr>
+                <tr><td>hver</td><td>kvar</td></tr>
+                <tr><td>hverandre</td><td>kvarandre</td></tr>
+                <tr><td>hvem</td><td>kven</td></tr>
+                <tr><td>hvorfor</td><td>kvifor</td></tr>
+                <tr><td>leste</td><td>las</td></tr>
+                <tr><td>lest</td><td>lese</td></tr>
+                <tr><td>leser</td><td>les</td></tr>
+                <tr><td>lav</td><td>låg</td></tr>
+                <tr><td>lå</td><td>låg</td></tr>
+                <tr><td>vi</td><td>me</td></tr>
+                <tr><td>mye</td><td>mykje</td></tr>
+                <tr><td>mandag</td><td>måndag</td></tr>
+                <tr><td>nå</td><td>no</td></tr>
+                <tr><td>noen</td><td>nokon / nokre / noka</td></tr>
+                <tr><td>noe</td><td>noko</td></tr>
+                <tr><td>fornøyd</td><td>nøgd</td></tr>
+                <tr><td>også</td><td>òg</td></tr>
+                <tr><td>sammen</td><td>saman</td></tr>
+                <tr><td>si</td><td>seie</td></tr>
+                <tr><td>selger</td><td>sel</td></tr>
+                <tr><td>siden</td><td>sidan</td></tr>
+                <tr><td>selv</td><td>sjølv</td></tr>
+                <tr><td>se</td><td>sjå</td></tr>
+                <tr><td>forskjell</td><td>skilnad</td></tr>
+                <tr><td>skyldes</td><td>skuldast</td></tr>
+                <tr><td>spille</td><td>spele</td></tr>
+                <tr><td>spørre</td><td>spørje</td></tr>
+                <tr><td>sted</td><td>stad</td></tr>
+                <tr><td>størrelse</td><td>storleik</td></tr>
+                <tr><td>søndag</td><td>sundag</td></tr>
+                <tr><td>veldig</td><td>særs</td></tr>
+                <tr><td>telle</td><td>telje</td></tr>
+                <tr><td>for eksempel</td><td>til dømes</td></tr>
+                <tr><td>til tross for</td><td>trass i</td></tr>
+                <tr><td>tirsdag</td><td>tysdag</td></tr>
+                <tr><td>voksen</td><td>vaksen</td></tr>
+                <tr><td>forsiktig</td><td>varsam</td></tr>
+                <tr><td>ble</td><td>vart</td></tr>
+                <tr><td>vann</td><td>vatn</td></tr>
+                <tr><td>velge</td><td>velje</td></tr>
+                <tr><td>være</td><td>vere</td></tr>
+                <tr><td>blir</td><td>vert</td></tr>
+                <tr><td>bli</td><td>verte</td></tr>
+                <tr><td>vindu</td><td>vindauge</td></tr>
+                <tr><td>vært</td><td>vore</td></tr>
+                <tr><td>blitt</td><td>vorte</td></tr>
+                <tr><td>alene</td><td>åleine</td></tr>
+                <tr><td>følelser</td><td>kjensler</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        <strong>⚠️ OBS!</strong> Noen ord som "dere", "de" eller "noen" er ikke med i listens, fordi de kan bli til ulike ord på nynorsk avhengig av kontekst.
+    </div>
+</main>
+
+<footer>
+    <p>Skolesaus © 2026 — Gjør skolehverdagen din enklere</p>
+</footer>
+
+
+<script src="nav.js"></script>
+<script src="skolesaus-tracking.js"></script>
+<script src="cookie-modal.js"></script>
+</body>
+</html>
