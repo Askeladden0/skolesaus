@@ -239,7 +239,7 @@
   function metersToPxX(m) { return (m / PHYSICS_W) * CANVAS_W; }
   function metersToPxY(m) { return (m / PHYSICS_H) * CANVAS_H; }
 
-  const GAME_OVER_HEIGHT = pxToMetersY(WALL_TOP_PX);
+  const activity_OVER_HEIGHT = pxToMetersY(WALL_TOP_PX);
 
   const FRUIT_TYPES = [
     { name:'Cherry',     pixelRadius:17, physicsRadius: pxToMetersX(17), color:'#e8334a', emoji:'🍒', points:1  },
@@ -328,7 +328,7 @@
 
     isOutOfBounds() {
       const topY = this.body.translation().y - this.physicsRadius;
-      if (topY < GAME_OVER_HEIGHT) {
+      if (topY < activity_OVER_HEIGHT) {
         if (this.startOutOfBounds && performance.now() - this.startOutOfBounds > 1000) {
           return true;
         }
@@ -435,7 +435,7 @@
       for (const fruit of fruits) {
         const pos = fruit.body.translation();
         const topY = pos.y - fruit.physicsRadius;
-        if (topY < GAME_OVER_HEIGHT + 0.1) {
+        if (topY < activity_OVER_HEIGHT + 0.1) {
           nearTop = true;
           break;
         }
@@ -930,7 +930,7 @@
   }
 
   window.addEventListener('error', (e) => {
-    console.error('Game error:', e.error);
+    console.error('activity error:', e.error);
   });
 
   document.addEventListener('dblclick', (e) => {

@@ -236,8 +236,8 @@
             }
         }
 
-        /* ─── MINI GAME STRIP (inside table) ─── */
-        .mini-game-strip {
+        /* ─── MINI activity STRIP (inside table) ─── */
+        .mini-activity-strip {
             display: flex;
             gap: 0.75rem;
             padding: 1rem 1.2rem;
@@ -247,7 +247,7 @@
             flex-wrap: wrap;
         }
 
-        .mini-game-card {
+        .mini-activity-card {
             display: flex;
             align-items: center;
             gap: 0.6rem;
@@ -263,13 +263,13 @@
             white-space: nowrap;
         }
 
-        .mini-game-card:hover {
+        .mini-activity-card:hover {
             border-color: var(--accent);
             transform: translateY(-1px);
             color: var(--accent);
         }
 
-        .mini-game-card img {
+        .mini-activity-card img {
             width: 36px;
             height: 36px;
             object-fit: cover;
@@ -277,8 +277,8 @@
             flex-shrink: 0;
         }
 
-        .mini-game-label { display: flex; flex-direction: column; gap: 1px; }
-        .mini-game-label span { font-size: 0.68rem; color: var(--muted); font-weight: 400; }
+        .mini-activity-label { display: flex; flex-direction: column; gap: 1px; }
+        .mini-activity-label span { font-size: 0.68rem; color: var(--muted); font-weight: 400; }
 
         .mini-strip-header {
             background: rgba(67, 212, 178, 0.08);
@@ -443,8 +443,6 @@
                 <tr><td>ett</td><td>eitt</td></tr>
                 <tr><td>man</td><td>ein</td></tr>
                 <tr><td>bare</td><td>berre</td></tr>
-                <tr><td>virkemiddel</td><td>verkemiddel</td></tr>
-                <tr><td>språklig</td><td>språkleg</td></tr>
                 <tr><td>eksempel</td><td>døme</td></tr>
                 <tr><td>for eksempel</td><td>til dømes</td></tr>
                 <tr><td>også</td><td>òg</td></tr>
@@ -459,22 +457,22 @@
                 <tr><td>hva</td><td>kva</td></tr>
                 <tr><td>hvilken</td><td>kva for ein</td></tr>
 
-                <!-- ✏️ SPILL: kopier én .mini-game-card for å legge til et nytt spill -->
-                <tr class="mini-strip-header"><td colspan="2">La meg blesse deg med noen greier til når eksamen er ferdig</td></tr>
+                <!-- ✏️ SPILL: kopier én .mini-activity-card for å legge til et nytt spill -->
+                <tr class="mini-strip-header"><td colspan="2">La meg blesse deg med noen greier til når eksamen er ferdig❤</td></tr>
                 <tr class="mini-strip-row">
                     <td colspan="2">
-                        <div class="mini-game-strip">
-                            <a href="tallkombo.html" class="mini-game-card">
+                        <div class="mini-activity-strip">
+                            <a href="tallkombo.html" class="mini-activity-card">
                                 <img src="skolesaus-main/Tallkombo.jpg" alt="Tallkombo">
-                                <div class="mini-game-label">Tallkombo <span>Kombiner tall</span></div>
+                                <div class="mini-activity-label">Tallkombo <span>Kombiner tall</span></div>
                             </a>
-                            <a href="kloss_spreng.html" class="mini-game-card">
+                            <a href="kloss_spreng.html" class="mini-activity-card">
                                 <img src="kloss.png" alt="Kloss Spreng">
-                                <div class="mini-game-label">Kloss Spreng <span>Spreng rader</span></div>
+                                <div class="mini-activity-label">Kloss Spreng <span>Spreng rader</span></div>
                             </a>
-                            <a href="fruktspleis.html" class="mini-game-card">
+                            <a href="fruktspleis.html" class="mini-activity-card">
                                 <img src="skolesaus-main/images/melon.jpg" alt="Frukt Spleis">
-                                <div class="mini-game-label">Frukt Spleis <span>Spleis frukt</span></div>
+                                <div class="mini-activity-label">Frukt Spleis <span>Spleis frukt</span></div>
                             </a>
                         </div>
                     </td>
@@ -482,6 +480,8 @@
                 <tr class="table-section-header"><td colspan="2">📖 Andre ord</td></tr>
                 <tr><td>annenhver</td><td>annankvar</td></tr>
                 <tr><td>annerledes</td><td>annleis</td></tr>
+                <tr><td>virkemiddel</td><td>verkemiddel</td></tr>
+                <tr><td>språklig</td><td>språkleg</td></tr>
                 <tr><td>enten</td><td>anten</td></tr>
                 <tr><td>hete</td><td>heite</td></tr>
                 <tr><td>igjen</td><td>att</td></tr>
@@ -567,13 +567,13 @@
     </div>
 
 
-    <!-- Games section (original, at the bottom) -->
+    <!-- activitys section (original, at the bottom) -->
     <section class="activities-section" id="aktiviteter">
         <div class="section-header">
             <h2 class="section-title">Ikke blokkerte <span>greier for skolen</span></h2>
             <br>
             <div class="activity-grid">
-                <article class="activity-card" itemscope itemtype="https://schema.org/EducationalGame">
+                <article class="activity-card" itemscope itemtype="https://schema.org/Educationalactivity">
                     <div class="activity-img-wrap">
                         <img src="skolesaus-main/Tallkombo.jpg" alt="Klasserom">
                     </div>
@@ -585,7 +585,7 @@
                         </div>
                     </div>
                 </article>
-                <article class="activity-card" itemscope itemtype="https://schema.org/EducationalGame">
+                <article class="activity-card" itemscope itemtype="https://schema.org/Educationalactivity">
                     <div class="activity-img-wrap">
                         <img src="kloss.png" alt="Klasserom">
                     </div>

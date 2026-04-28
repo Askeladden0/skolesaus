@@ -49,7 +49,7 @@
             min-width: 80px;
         }
 
-        #game-board {
+        #activity-board {
             width: 400px;
             height: 400px;
             background-color: var(--grid-color);
@@ -60,7 +60,7 @@
             overflow: visible; 
         }
 
-        .game-over-overlay {
+        .activity-over-overlay {
             position: absolute;
             inset: 0;
             display: flex;
@@ -74,12 +74,12 @@
             transition: opacity 0.2s ease;
         }
 
-        .game-over-overlay.show {
+        .activity-over-overlay.show {
             opacity: 1;
             pointer-events: auto;
         }
 
-        .game-over-card {
+        .activity-over-card {
             width: min(290px, calc(100% - 40px));
             padding: 28px 24px;
             border-radius: 18px;
@@ -91,23 +91,23 @@
             transition: transform 0.22s ease;
         }
 
-        .game-over-overlay.show .game-over-card {
+        .activity-over-overlay.show .activity-over-card {
             transform: translateY(0) scale(1);
         }
 
-        .game-over-title {
+        .activity-over-title {
             margin: 0 0 8px;
             font-size: 34px;
             font-weight: 800;
         }
 
-        .game-over-text {
+        .activity-over-text {
             margin: 0;
             font-size: 15px;
             line-height: 1.4;
         }
 
-        .game-over-score {
+        .activity-over-score {
             margin: 18px auto 20px;
             width: fit-content;
             min-width: 120px;
@@ -117,13 +117,13 @@
             color: white;
         }
 
-        .game-over-score strong {
+        .activity-over-score strong {
             display: block;
             font-size: 11px;
             letter-spacing: 0.08em;
         }
 
-        .game-over-score span {
+        .activity-over-score span {
             display: block;
             margin-top: 4px;
             font-size: 28px;
@@ -204,22 +204,22 @@
         </div>
     </div>
 <br>
-    <div id="game-board">
-        <div id="game-over-overlay" class="game-over-overlay">
-            <div class="game-over-card">
-                <h2 class="game-over-title">Spillet er over</h2>
-                <p class="game-over-text">Brettet er fullt. Vil du prøve en gang til?</p>
-                <div class="game-over-score">
+    <div id="activity-board">
+        <div id="activity-over-overlay" class="activity-over-overlay">
+            <div class="activity-over-card">
+                <h2 class="activity-over-title">Spillet er over</h2>
+                <p class="activity-over-text">Brettet er fullt. Vil du prøve en gang til?</p>
+                <div class="activity-over-score">
                     <strong>POENGSUM</strong>
                     <span id="final-score">0</span>
                 </div>
-                <button type="button" onclick="resetGame()">Spill igjen</button>
+                <button type="button" onclick="resetactivity()">Spill igjen</button>
             </div>
         </div>
     </div>
 
     <div class="controls">
-        <button type="button" onclick="resetGame()">Nytt spill</button>
+        <button type="button" onclick="resetactivity()">Nytt spill</button>
     </div>
 
 <script src="nav.js"></script>
@@ -230,14 +230,14 @@
         let score = 0;
         let best = localStorage.getItem('2048-best') || 0;
         let tileIdCounter = 0;
-        let gameOver = false;
+        let activityOver = false;
         let moveLockUntil = 0;
         const size = 4;
         const moveDuration = 150;
-        const boardElement = document.getElementById('game-board');
-        const gameOverOverlay = document.getElementById('game-over-overlay');
+        const boardElement = document.getElementById('activity-board');
+        const activityOverOverlay = document.getElementById('activity-over-overlay');
         const finalScoreElement = document.getElementById('final-score');
-        const gameStateKey = '2048-state';
+        const activityStateKey = '2048-state';
 
         function getPos(pos) { return pos * (81.25 + 15) + 15; }
 
@@ -249,17 +249,17 @@
                     cell.className = 'grid-cell';
                     cell.style.top = getPos(r) + 'px';
                     cell.style.left = getPos(c) + 'px';
-                    boardElement.insertBefore(cell, gameOverOverlay);
+                    boardElement.insertBefore(cell, activityOverOverlay);
                 }
             }
         }
 
-        function resetGame() {
+        function resetactivity() {
             board = Array(size).fill().map(() => Array(size).fill(null));
             score = 0;
-            gameOver = false;
+            activityOver = false;
             moveLockUntil = 0;
-            gameOverOverlay.classList.remove('show');
+            activityOverOverlay.classList.remove('show');
             finalScoreElement.innerText = 0;
             document.getElementById('score').innerText = 0;
             document.getElementById('best').innerText = best;
@@ -269,21 +269,21 @@
             renderBoard({
                 spawnIds: [firstSpawn?.id, secondSpawn?.id].filter(Boolean)
             });
-            saveGameState();
+            saveactivityState();
         }
 
-        function saveGameState() {
-            localStorage.setItem(gameStateKey, JSON.stringify({
+        function saveactivityState() {
+            localStorage.setItem(activityStateKey, JSON.stringify({
                 board,
                 score,
                 best,
                 tileIdCounter,
-                gameOver
+                activityOver
             }));
         }
 
-        function loadGameState() {
-            const savedState = localStorage.getItem(gameStateKey);
+        function loadactivityState() {
+            const savedState = localStorage.getItem(activityStateKey);
             if (!savedState) return false;
 
             try {
@@ -294,13 +294,13 @@
                 score = parsed.score || 0;
                 best = parsed.best || best;
                 tileIdCounter = parsed.tileIdCounter || tileIdCounter;
-                gameOver = Boolean(parsed.gameOver);
+                activityOver = Boolean(parsed.activityOver);
                 moveLockUntil = 0;
 
                 document.getElementById('score').innerText = score;
                 document.getElementById('best').innerText = best;
                 finalScoreElement.innerText = score;
-                gameOverOverlay.classList.toggle('show', gameOver);
+                activityOverOverlay.classList.toggle('show', activityOver);
                 renderBoard();
                 return true;
             } catch {
@@ -308,7 +308,7 @@
             }
         }
 
-        function isGameOver() {
+        function isactivityOver() {
             for (let r = 0; r < size; r++) {
                 for (let c = 0; c < size; c++) {
                     if (!board[r][c]) return false;
@@ -321,13 +321,13 @@
             return true;
         }
 
-        function endGame() {
-            if (gameOver) return;
-            gameOver = true;
+        function endactivity() {
+            if (activityOver) return;
+            activityOver = true;
             setTimeout(() => {
                 finalScoreElement.innerText = score;
-                gameOverOverlay.classList.add('show');
-                saveGameState();
+                activityOverOverlay.classList.add('show');
+                saveactivityState();
             }, 150);
         }
 
@@ -377,7 +377,7 @@
                         mergeSet.has(tile.id) ? 'tile-merge' : ''
                     ].filter(Boolean).join(' ');
 
-                    boardElement.insertBefore(createTileElement(tile, r, c, extraClass), gameOverOverlay);
+                    boardElement.insertBefore(createTileElement(tile, r, c, extraClass), activityOverOverlay);
                 }
             }
         }
@@ -455,7 +455,7 @@
                         if (!element) {
                             element = document.createElement('div');
                             element.id = `tile-${data.id}`;
-                            boardElement.insertBefore(element, gameOverOverlay);
+                            boardElement.insertBefore(element, activityOverOverlay);
                         }
 
                         element.className = `tile tile-${data.val}`;
@@ -485,7 +485,7 @@
         }
 
         function move(dir) {
-            if (gameOver || performance.now() < moveLockUntil) return;
+            if (activityOver || performance.now() < moveLockUntil) return;
 
             const beforePositions = getBoardPositions();
             let result = { moved: false, mergedIds: [], removedTargets: {} };
@@ -496,7 +496,7 @@
             if (dir === 'down') result = shift(true, true);
 
             if (!result.moved) {
-                if (isGameOver()) endGame();
+                if (isactivityOver()) endactivity();
                 return;
             }
 
@@ -519,8 +519,8 @@
                     spawnIds: spawnInfo ? [spawnInfo.id] : [],
                     mergeIds: result.mergedIds
                 });
-                saveGameState();
-                if (isGameOver()) endGame();
+                saveactivityState();
+                if (isactivityOver()) endactivity();
             }, moveDuration);
         }
 
@@ -583,8 +583,8 @@
         });
 
         initGrid();
-        if (!loadGameState()) {
-            resetGame();
+        if (!loadactivityState()) {
+            resetactivity();
         }
     </script>
 </body>
