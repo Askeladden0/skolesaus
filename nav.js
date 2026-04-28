@@ -15,7 +15,8 @@
 
     // ── Nav items — add new pages here ───────────────────────────────────
     var NAV_ITEMS = [
-        { label: 'Hjem',        href: 'index.html',      match: ['/', '/index.html'] },
+        { label: '<i class="fa-solid fa-house"></i>',        href: 'index.html',      match: ['/', '/index.html'] },
+        
       
     ];
 
@@ -109,7 +110,7 @@
         '<a href="index.html" class="ss-nav-logo" aria-label="Skolesaus">SKOLE<span>SAUS</span></a>' +
         '<div class="ss-nav-right">' +
             '<ul class="ss-nav-links">' + linksHTML + '</ul>' +
-            '<span class="ss-nav-made-by">Laget av <a href="https://www.tiktok.com/@snorre33" style="color: #43d4b2; text-decoration: underline;"><strong>Snorre Saus</strong></a></span>' +
+            '<span class="ss-nav-made-by">Laget av <a href="https://www.tiktok.com/@snorre33" style="color: #43d4b2; text-decoration: underline;"><strong>Snorre Saus</strong></a></span><i class="fa-brands fa-tiktok"></i>' +
         '</div>' +
         '</nav>';
 
