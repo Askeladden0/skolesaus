@@ -109,7 +109,7 @@
         '<a href="index.html" class="ss-nav-logo" aria-label="Skolesaus">SKOLE<span>SAUS</span></a>' +
         '<div class="ss-nav-right">' +
             '<ul class="ss-nav-links">' + linksHTML + '</ul>' +
-            '<span class="ss-nav-made-by">Laget av <a href="https://www.tiktok.com/@snorresaus" style="color: #43d4b2; text-decoration: underline;"><strong>Snorre Saus</strong></a></span>' +
+            '<span class="ss-nav-made-by">Laget av <a href="https://www.tiktok.com/@snorre33" style="color: #43d4b2; text-decoration: underline;"><strong>Snorre Saus</strong></a></span>' +
         '</div>' +
         '</nav>';
 
