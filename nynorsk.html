@@ -418,10 +418,10 @@
             <li>Velg <strong>Alternativer</strong></li>
             <li>Gå til <strong>Korrektur</strong></li>
             <li>Klikk <strong>Alternativer for autokorrektur</strong></li>
-            <li>Legg inn ordene fra listen under</li>
+            <li>Kopier inn ordene fra listen under ved å trykke på dem, og <strong>legg dem inn</strong></li>
         </ol>
         <div class="guide-tip">
-            💡 <strong>Tipp:</strong> Trykk Windows + Shift for å ha denne nettsiden og Word oppe samtidig!
+            💡 <strong>Tipps:</strong> Trykk Windows + Shift for å ha denne nettsiden og Word oppe samtidig!
         </div>
     </section>
 
@@ -437,7 +437,7 @@
             </thead>
             <tbody>
                 <tr class="table-section-header"><td colspan="2">⭐ De viktigste ordene</td></tr>
-                <tr><td>jeg</td><td>eg</td></tr>
+                <tr><td onclick="navigator.clipboard.writeText(this.innerText)" style="cursor:pointer">jeg</td><td>eg</td></tr>
                 <tr><td>ikke</td><td>ikkje</td></tr>
                 <tr><td>en</td><td>ein</td></tr>
                 <tr><td>et</td><td>eit</td></tr>
@@ -458,6 +458,8 @@
                 <tr><td>hva</td><td>kva</td></tr>
                 <tr><td>hvilken</td><td>kva for ein</td></tr>
 
+
+          
                 <!-- ✏️ SPILL: kopier én .mini-activity-card for å legge til et nytt spill -->
                 <tr class="mini-strip-header"><td colspan="2">La meg blesse deg med noen greier til når eksamen er ferdig❤</td></tr>
                 <tr class="mini-strip-row">
@@ -478,6 +480,11 @@
                         </div>
                     </td>
                 </tr>
+                    
+           <div class="note">
+        <strong>⚠️ OBS!</strong> Noen ord som "dere", "de" eller "noen" er ikke med i listen, fordi de kan bli til ulike ord på nynorsk avhengig av kontekst.
+    </div>
+    <br>
                 <tr class="table-section-header"><td colspan="2">📖 Andre ord</td></tr>
                 <tr><td>annenhver</td><td>annankvar</td></tr>
                 <tr><td>annerledes</td><td>annleis</td></tr>
@@ -563,9 +570,7 @@
         </table>
     </div>
 
-    <div class="note">
-        <strong>⚠️ OBS!</strong> Noen ord som "dere", "de" eller "noen" er ikke med i listen, fordi de kan bli til ulike ord på nynorsk avhengig av kontekst.
-    </div>
+   
 
 
     <!-- activitys section (original, at the bottom) -->
@@ -604,11 +609,22 @@
 
 </main>
 
+
 <footer>
-    <p>Skolesaus © 2026 — Gjør skolehverdagen din enklere</p>
+    <p>Skolesaus © 2026 — Snorre Saus sitt livs verk🥺</p>
 </footer>
 
-
+<script>
+document.querySelectorAll('td').forEach(td => {
+  td.style.cursor = 'pointer';
+  td.style.transition = 'color 0.1s ease';
+  td.addEventListener('click', () => {
+    navigator.clipboard.writeText(td.innerText);
+    td.style.color = '#9effe9';
+    setTimeout(() => td.style.color = '', 400);
+  });
+});
+</script>
 
 </body>
 </html>
