@@ -1,0 +1,65 @@
+
+<style>
+:root {
+  --bg: #171925;
+  --surface: #161722;
+  --surface2: #2e3047;
+  --accent: #43d4b2;
+  --text: #d4d4d4;
+  --muted: #888;
+  --border: #2a2a2a;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: 'Lato', Arial, sans-serif; }
+</style>
+
+<div style="background: var(--bg); min-height: 100vh; color: var(--text); font-family: 'Lato', Arial, sans-serif; padding: 0;">
+
+  <header style="padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: #171925;">
+
+  </header>
+
+  <section style="padding: 4rem 5% 3rem;">
+    <div style="margin-bottom: 2.5rem;">
+      <h1 style="font-size: clamp(2rem, 5vw, 3rem); color: #d4d4d4; letter-spacing: -0.5px; margin-bottom: 0.4rem;">
+        Mal til <span style="color: #43d4b2;">norsk</span>
+      </h1>
+      
+    </div>
+
+    <div style="max-width: 560px;">
+      <div style="background: #161722; border: 1px solid #2a2a2a; border-radius: 8px; overflow: hidden; transition: border-color 0.2s;">
+
+        <div style="height: 140px; background: linear-gradient(135deg, #1e2235 0%, #2e3047 100%); display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #2a2a2a; position: relative;">
+          <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="56" height="56" rx="10" fill="#2e3047"/>
+            <path d="M16 14h16l8 8v20a2 2 0 01-2 2H16a2 2 0 01-2-2V16a2 2 0 012-2z" stroke="#43d4b2" stroke-width="1.5" fill="none"/>
+            <path d="M32 14v8h8" stroke="#43d4b2" stroke-width="1.5" fill="none"/>
+            <line x1="20" y1="26" x2="36" y2="26" stroke="#43d4b2" stroke-width="1.2"/>
+            <line x1="20" y1="30" x2="36" y2="30" stroke="#888" stroke-width="1.2"/>
+            <line x1="20" y1="34" x2="28" y2="34" stroke="#888" stroke-width="1.2"/>
+          </svg>
+          <span style="position: absolute; top: 10px; left: 12px; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #43d4b2; border: 1px solid #43d4b2; padding: 3px 9px; border-radius: 3px; background: #171925;">PDF</span>
+        </div>
+
+        <div style="padding: 1.4rem 1.5rem 1.6rem;">
+          <h2 style="font-size: 1.3rem; color: #d4d4d4; margin-bottom: 0.4rem; letter-spacing: -0.3px;">Norsk-mal</h2>
+          <p style="font-size: 0.82rem; color: #888; line-height: 1.65; margin-bottom: 1.4rem;">Mal til fagtekst, retorisk analyse, essay og diktanalyse</p>
+
+          <a id="mal-download" href="mal.pdf" download style="display: inline-flex; align-items: center; gap: 8px; background: transparent; color: #43d4b2; padding: 0.75rem 2rem; font-size: 0.9rem; font-weight: 700; border-radius: 4px; border: 1.5px solid #43d4b2; transition: background 0.15s, color 0.15s; cursor: pointer; text-decoration: none;" onmouseover="this.style.background='#43d4b2';this.style.color='#000'" onmouseout="this.style.background='transparent';this.style.color='#43d4b2'">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M7 1v8M3.5 6l3.5 3.5L10.5 6M2 12h10" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg>
+            Last ned mal
+          </a>
+        </div>
+
+      </div>
+      <p style="font-size: 0.75rem; color: #555; margin-top: 0.8rem;">Erstatt <code style="background: #2e3047; padding: 1px 5px; border-radius: 3px; color: #43d4b2; font-size: 0.72rem;">mal.pdf</code> med riktig filsti i HTML-en</p>
+    </div>
+  </section>
+  <body>
+<script src="nav.js"></script>
+<script src="skolesaus-tracking.js"></script>
+<script src="cookie-modal.js"></script>
+<link rel="icon" type="image/x-icon" href="/logo3.png">
+</body>
+</div>
