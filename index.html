@@ -33,7 +33,7 @@
             --bg: #171925;
             --surface: #161722;
             --surface2: #2e3047;
-            --accent: #43d4b2;
+            --accent: #31cea9;
             --text: #d4d4d4;
             --muted: #888;
             --border: #2a2a2a;
@@ -53,7 +53,7 @@
 
         /* ─── HEADER ─── */
         header {
-            padding: 1rem 5%;
+            padding: 0.8rem 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -67,17 +67,32 @@
         .logo {
             font-family: var(--font-body);
             font-weight: 700;
-            font-size: 1.8rem;
+            font-size: 1.3rem;
             color: var(--accent);
             letter-spacing: -0.5px;
         }
 
         .logo span { color: var(--text); }
 
-        .header-right { display: flex; align-items: center; gap: 2rem; }
+        .header-right { 
+            display: flex; 
+            align-items: center; 
+            gap: 1.5rem;
+            font-size: 0.75rem;
+        }
 
-        .made-by { font-size: 0.78rem; font-family: var(--font-body); }
-        .made-by strong { color: var(--text); }
+        .header-right a {
+            color: var(--muted);
+            transition: color 0.2s;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .header-right a:hover { color: var(--accent); }
+
+        .made-by { display: none; }
 
         /* ─── HERO ─── */
         .hero {
@@ -168,8 +183,9 @@
 
         .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
 
-        /* ─── activities SECTION ─── */
-        .activities-section { padding: 5rem 5%; }
+        /* ─── RESSURSER & AKTIVITETER SECTION ─── */
+        .resources-section { padding: 5rem 5%; }
+        
         .section-header { margin-bottom: 2.5rem; }
 
         .section-title {
@@ -272,6 +288,19 @@
             pointer-events: none;
         }
 
+        /* ─── RESOURCES & ACTIVITIES CONTAINER ─── */
+        .resources-container {
+            margin-bottom: 4rem;
+        }
+
+        .resources-container .section-header { margin-bottom: 1.8rem; }
+
+        .activities-container {
+            margin-top: 4rem;
+        }
+
+        .activities-container .section-header { margin-bottom: 1.8rem; }
+
         /* ─── FOOTER ─── */
         footer {
             margin-top: 3rem;
@@ -310,7 +339,7 @@
             .hero { min-height: 60vh; padding: 4rem 5%; }
             footer { grid-template-columns: 1fr; gap: 2rem; }
             .footer-bottom { flex-direction: column; gap: 0.5rem; }
-            .made-by { display: none; }
+            .header-right { flex-direction: column; gap: 0.5rem; align-items: flex-end; }
         }
     </style>
     <script type="application/ld+json">
@@ -330,7 +359,8 @@
       "@type": "BreadcrumbList",
       "itemListElement": [
         {"@type": "ListItem", "position": 1, "name": "Hjem", "item": "https://skolesaus.no"},
-        {"@type": "ListItem", "position": 2, "name": "Aktiviteter", "item": "https://skolesaus.no#aktiviteter"}
+        {"@type": "ListItem", "position": 2, "name": "Ressurser", "item": "https://skolesaus.no#ressurser"},
+        {"@type": "ListItem", "position": 3, "name": "Aktiviteter", "item": "https://skolesaus.no#aktiviteter"}
       ]
     }
     </script>
@@ -339,120 +369,134 @@
 
 <!-- Nav is injected by nav.js -->
 
+<!-- ─── HEADER ─── -->
+
+
 <!-- ─── HERO ─── -->
 <section class="hero">
     <div class="hero-bg"></div>
     <div class="hero-content">
-        
         <h1>SKOLESAUS</h1>
         <div class="hero-btns">
             <a href="nynorsk.html" class="btn-primary">Nynorsk-oversetter</a>
-            <a href="#aktiviteter" class="btn-secondary">Se aktiviteter</a>
+            <a href="#ressurser" class="btn-secondary">Se ressurser</a>
         </div>
     </div>
 </section>
 
-<!-- ─── activities SECTION ─── -->
-<section class="activities-section" id="aktiviteter">
+<!-- ─── RESSURSER SECTION ─── -->
+<section class="resources-section" id="ressurser">
+    <div class="resources-container">
+        <div class="section-header">
+            <h2 class="section-title">Mine <span>ressurser</span></h2>
+        </div>
+        <div class="activity-grid">
 
+            <article class="activity-card">
+                <div class="activity-img-wrap">
+                    <img src="https://www.computerworld.com/wp-content/uploads/2025/05/1656594-0-68082700-1748257438-excel-cheat-sheet-primary-2000px.jpg?quality=50&strip=all&w=1024" alt="mattetavle">
+                    <span class="activity-tag">Nytt</span>
+                </div>
+                <div class="activity-info">
+                    <h3 class="activity-title" itemprop="name">Snarveier til P-matte</h3>
+                    <p class="activity-desc" itemprop="description">For 1P, 1PY, 2P og 2PY</p>
+                    <div class="play-btn-wrap">
+                        <a href="p_matte_snarveier.html" class="play-btn activity-link">Start</a>
+                    </div>
+                </div>
+            </article>
 
-<div>
+            <article class="activity-card">
+                <div class="activity-img-wrap">
+                    <img src="https://www.computerworld.com/wp-content/uploads/2025/04/1663592-0-84399500-1744094459-word-cheat-sheet-primary-2000px.jpg?quality=50&strip=all&w=1024" alt="Klasserom">
+                </div>
+                <div class="activity-info">
+                    <h3 class="activity-title" itemprop="name">Mal til norsk og nynorsk</h3>
+                    <p class="activity-desc" itemprop="description">Maler for retorisk analyse, essay, fagtekst, osv.</p>
+                    <div class="play-btn-wrap">
+                        <a href="norsk_mal.html" class="play-btn activity-link">Start</a>
+                    </div>
+                </div>
+            </article>
 
-    <div class="section-header">
-        <h2 class="section-title">Mine <span>tilbud</span></h2>
-        <p class="section-sub">Gjør skolehverdagen din enklere</p>
-    <br>
+            <article class="activity-card" itemscope itemtype="https://schema.org/EducationalGame">
+                <div class="activity-img-wrap">
+                    <img src="https://librarybydesign.com/cdn/shop/collections/REDbooks01_1200x1200.jpg?v=1613210353" alt="Klasserom">
+                </div>
+                <div class="activity-info">
+                    <h3 class="activity-title" itemprop="name">Nynorsk-oversetter</h3>
+                    <p class="activity-desc" itemprop="description">Oversett tekst fra bokmål til nynorsk automatisk</p>
+                    <div class="play-btn-wrap">
+                        <a href="nynorsk.html" class="play-btn activity-link">Start</a>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+    </div>
+
+    <!-- ─── AKTIVITETER SECTION ─── -->
+    <div class="activities-container" id="aktiviteter">
+        <div class="section-header">
+             <h2 class="section-title">Mine <span>aktiviteter</span></h2>
+        </div>
         <div class="activity-grid">
 
             <article class="activity-card" itemscope itemtype="https://schema.org/EducationalGame">
-            
-            <div class="activity-img-wrap">
-                <img src="https://image.utdanningsnytt.no/183754.jpg?imageId=183754&width=3000&height=1712&format=jpg" alt="Klasserom">
-                 <span class="activity-tag">Nytt</span>
-            </div>
-            <div class="activity-info">
-                <h3 class="activity-title" itemprop="name">Mal til norsk og nynorsk</h3>
-                <p class="activity-desc" itemprop="description">Oversett tekst fra bokmål til nynorsk automatisk</p>
-                <div class="play-btn-wrap">
-                    <a href="norsk_mal.html" class="play-btn activity-link">Start</a>
+                <div class="activity-img-wrap">
+                    <img src="skolesaus-main/Tallkombo.jpg" alt="2048 - Kombinér tall for å nå målnummeret">
+                    <span class="activity-tag">Snorres favoritt</span>
                 </div>
-            </div>
+                <div class="activity-info">
+                    <h3 class="activity-title" itemprop="name">2048</h3>
+                    <p class="activity-desc" itemprop="description">Kombinér tall for å nå 2048. Utvikl mattenkingen din og øv på tallkombinering gjennom en engasjerende aktivitet.</p>
+                    <div class="play-btn-wrap">
+                        <a href="tallkombo.html" class="play-btn activity-link">Start</a>
+                    </div>
+                </div>
             </article>
 
-           <article class="activity-card" itemscope itemtype="https://schema.org/EducationalGame">
-            
-            <div class="activity-img-wrap">
-                <img src="https://image.forskning.no/117321.webp?imageId=117321&width=2116&height=1208&format=webp" alt="Klasserom">
-                 <span class="activity-tag">Nytt</span>
-            </div>
-            <div class="activity-info">
-                <h3 class="activity-title" itemprop="name">Nynorsk-oversetter</h3>
-                <p class="activity-desc" itemprop="description">Oversett tekst fra bokmål til nynorsk automatisk</p>
-                <div class="play-btn-wrap">
-                    <a href="nynorsk.html" class="play-btn activity-link">Start</a>
+            <article class="activity-card" itemscope itemtype="https://schema.org/EducationalGame">
+                <div class="activity-img-wrap">
+                    <img src="skolesaus-main/images/melon.jpg" alt="Fruktspleis - Kombinér og spleis frukter sammen">
                 </div>
-            </div>
+                <div class="activity-info">
+                    <h3 class="activity-title" itemprop="name">Fruktspleis</h3>
+                    <p class="activity-desc" itemprop="description">Kombinér frukter for å spleise dem sammen til nye variasjoner. Planlegg strategisk og oppnå høyere poengsum i denne morsomme og utfordrende aktiviteten</p>
+                    <div class="play-btn-wrap">
+                        <a href="fruktspleis.html" class="play-btn activity-link">Start</a>
+                    </div>
+                </div>
             </article>
-       
-             <article class="activity-card" itemscope itemtype="https://schema.org/EducationalGame">
-            <div class="activity-img-wrap">
-                <img src="skolesaus-main/Tallkombo.jpg" alt="2048 - Kombinér tall for å nå målnummeret">
-                 <span class="activity-tag">Snorres favoritt</span>
-            </div>
-            <div class="activity-info">
-                <h3 class="activity-title" itemprop="name">2048</h3>
-                <p class="activity-desc" itemprop="description">Kombinér tall for å nå 2048. Utvikl mattenkingen din og øv på tallkombinering gjennom en engasjerende aktivitet.</p>
-                <div class="play-btn-wrap">
-                    <a href="tallkombo.html" class="play-btn activity-link">Start</a>
+
+            <article class="activity-card" itemscope itemtype="https://schema.org/EducationalGame">
+                <div class="activity-img-wrap">
+                    <img src="kloss.png" alt="Kloss Spreng - Pusling med blokker">
                 </div>
-            </div>
-        </article>
-    
-
-        <article class="activity-card" itemscope itemtype="https://schema.org/EducationalGame">
-            <div class="activity-img-wrap">
-                <img src="skolesaus-main/images/melon.jpg" alt="Fruktspleis - Kombinér og spleis frukter sammen">
-                
-            </div>
-            <div class="activity-info">
-                <h3 class="activity-title" itemprop="name">Fruktspleis</h3>
-                <p class="activity-desc" itemprop="description">Kombinér frukter for å spleise dem sammen til nye variasjoner. Planlegg strategisk og oppnå høyere poengsum i denne morsomme og utfordrende aktiviteten</p>
-                <div class="play-btn-wrap">
-                    <a href="fruktspleis.html" class="play-btn activity-link">Start</a>
+                <div class="activity-info">
+                    <h3 class="activity-title" itemprop="name">Kloss Spreng</h3>
+                    <p class="activity-desc" itemprop="description">Spreng blokker ved å danne fullstendige rader og kolonner. Et tilforlatelig aktivitet som tester strategisk tenkning og planlegging.</p>
+                    <div class="play-btn-wrap">
+                        <a href="kloss_spreng.html" class="play-btn activity-link">Start</a>
+                    </div>
                 </div>
-            </div>
-        </article>
+            </article>
 
-        <article class="activity-card" itemscope itemtype="https://schema.org/EducationalGame">
-            <div class="activity-img-wrap">
-                <img src="kloss.png" alt="Kloss Spreng - Pusling med blokker">
-                
-            </div>
-            <div class="activity-info">
-                <h3 class="activity-title" itemprop="name">Kloss Spreng</h3>
-                <p class="activity-desc" itemprop="description">Spreng blokker ved å danne fullstendige rader og kolonner. Et tilforlatelig aktivitet som tester strategisk tenkning og planlegging.</p>
-                <div class="play-btn-wrap">
-                    <a href="kloss_spreng.html" class="play-btn activity-link">Start</a>
-                </div>
-            </div>
-        </article>
-
-       
-
+        </div>
     </div>
-
-
 </section>
+
 <!-- ─── FOOTER ─── -->
 <footer>
     <div class="footer-brand">
         <div class="logo">SKOLE<span>SAUS</span></div>
-        <p>Pedagogiske aktiviteter for norske skoleelever. Vi gjør skolen morsomt.</p>
+        <p>Ressurser for å gjøre skolehverdagen enklere for norske elever. Laget av Snorre Saus.</p>
     </div>
     <div class="footer-col">
         <h4>Navigasjon</h4>
         <ul>
-            <li><a href="#aktiviteter">Alle aktiviteter</a></li>
+            <li><a href="#ressurser">Ressurser</a></li>
+            <li><a href="#aktiviteter">Aktiviteter</a></li>
             <li><a href="personvern.html">Personvern & cookies</a></li>
         </ul>
     </div>
@@ -472,7 +516,6 @@
 <!-- Shared scripts — include on every page -->
 <script src="nav.js"></script>
 <script src="skolesaus-tracking.js"></script>
-
 
 </body>
 </html>
