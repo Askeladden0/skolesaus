@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, follow">
+    <title>Min profil – Skolesaus</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="/images/logo3.png">
+    <link rel="stylesheet" href="../../shared/tokens.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--bg); color: var(--text); font-family: var(--font-body); }
+
+        main { max-width: 720px; margin: 0 auto; padding: 6rem 5% 4rem; }
+
+        #not-configured, #signed-out { text-align: center; padding: 3rem 1rem; }
+        #not-configured a, #signed-out a { color: var(--accent); }
+        .hidden { display: none !important; }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-avatar-wrap { position: relative; flex-shrink: 0; }
+        .profile-avatar-wrap svg { width: 72px; height: 72px; border-radius: 50%; }
+
+        .edit-avatar-btn {
+            position: absolute;
+            bottom: -4px;
+            right: -4px;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--surface2);
+            border: 2px solid var(--surface);
+            color: var(--text);
+            font-size: 0.7rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-info { flex: 1; min-width: 0; }
+
+        .display-name-row { display: flex; align-items: center; gap: 0.5rem; }
+        .display-name-row h1 { font-size: 1.3rem; letter-spacing: -0.3px; }
+        .display-name-row button {
+            background: none; border: none; color: var(--muted); cursor: pointer; font-size: 0.85rem;
+        }
+        .display-name-row button:hover { color: var(--accent); }
+        .profile-info p { color: var(--muted); font-size: 0.82rem; margin-top: 0.2rem; }
+
+        .signout-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            padding: 0.5rem 0.9rem;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .signout-btn:hover { color: #ff8b8b; border-color: rgba(214,48,49,0.4); }
+
+        .total-points {
+            background: linear-gradient(135deg, var(--surface2), var(--surface));
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.6rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .total-points .value { font-size: 2.4rem; font-weight: 700; color: var(--accent); letter-spacing: -1px; }
+        .total-points .label { font-size: 0.8rem; color: var(--muted); margin-top: 0.2rem; }
+        .total-points .note { font-size: 0.72rem; color: var(--muted); margin-top: 0.6rem; }
+
+        .games-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+
+        .game-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.2rem;
+        }
+        .game-card h3 { font-size: 1rem; margin-bottom: 0.8rem; }
+        .game-card .stat-row { display: flex; justify-content: space-between; font-size: 0.82rem; padding: 0.3rem 0; color: var(--muted); }
+        .game-card .stat-row strong { color: var(--text); }
+
+        /* ── Avatar-editor modal ── */
+        .modal-backdrop {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+            display: flex; align-items: center; justify-content: center; z-index: 2000; padding: 1rem;
+        }
+        .modal-backdrop.hidden { display: none; }
+        .modal {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+            padding: 1.5rem; max-width: 420px; width: 100%;
+        }
+        .modal h2 { font-size: 1.1rem; margin-bottom: 1rem; }
+        .modal-section { margin-bottom: 1.2rem; }
+        .modal-section p.label { font-size: 0.78rem; color: var(--muted); margin-bottom: 0.5rem; }
+        .base-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.6rem; }
+        .base-option, .color-option {
+            border: 2px solid transparent; border-radius: 50%; cursor: pointer; padding: 2px; line-height: 0;
+        }
+        .base-option svg, .color-option { width: 44px; height: 44px; }
+        .color-option { border-radius: 50%; display: inline-block; border: 2px solid transparent; cursor: pointer; }
+        .base-option.selected, .color-option.selected { border-color: var(--accent); }
+        .color-grid { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 0.6rem; margin-top: 1rem; }
+        .modal-actions button {
+            padding: 0.6rem 1.1rem; border-radius: 6px; font-size: 0.85rem; font-weight: 700; cursor: pointer; border: none;
+        }
+        .modal-actions .cancel-btn { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+        .modal-actions .save-btn { background: var(--accent); color: #0b0b0b; }
+    </style>
+</head>
+<body>
+
+<main>
+    <div id="not-configured" class="hidden">
+        <p>Innlogging er ikke satt opp ennå på denne siden. Se <code>SUPABASE_SETUP.md</code>.</p>
+    </div>
+
+    <div id="signed-out" class="hidden">
+        <p>Du må <a href="logg-inn.html">logge inn</a> for å se profilen din.</p>
+    </div>
+
+    <div id="profile-content" class="hidden">
+        <div class="profile-header">
+            <div class="profile-avatar-wrap">
+                <div id="avatar-slot"></div>
+                <button class="edit-avatar-btn" id="edit-avatar-btn" title="Rediger avatar" aria-label="Rediger avatar">
+                    <i class="fa-solid fa-pen"></i>
+                </button>
+            </div>
+            <div class="profile-info">
+                <div class="display-name-row">
+                    <h1 id="display-name-text"></h1>
+                    <button id="edit-name-btn" title="Rediger visningsnavn" aria-label="Rediger visningsnavn"><i class="fa-solid fa-pen"></i></button>
+                </div>
+                <p id="member-since"></p>
+            </div>
+            <button class="signout-btn" id="signout-btn">Logg ut</button>
+        </div>
+
+        <div class="total-points">
+            <div class="value" id="total-points-value">0</div>
+            <div class="label">Totalpoeng – alle spill</div>
+            <div class="note">Byttes senere mot premier</div>
+        </div>
+
+        <div class="games-grid" id="games-grid"></div>
+    </div>
+</main>
+
+<div class="modal-backdrop hidden" id="avatar-modal-backdrop">
+    <div class="modal">
+        <h2>Rediger avatar</h2>
+        <div class="modal-section">
+            <p class="label">Figur</p>
+            <div class="base-grid" id="base-grid"></div>
+        </div>
+        <div class="modal-section">
+            <p class="label">Farge</p>
+            <div class="color-grid" id="color-grid"></div>
+        </div>
+        <div class="modal-actions">
+            <button class="cancel-btn" id="avatar-cancel-btn">Avbryt</button>
+            <button class="save-btn" id="avatar-save-btn">Lagre</button>
+        </div>
+    </div>
+</div>
+
+<script src="/shared/nav.js"></script>
+<script src="/shared/tracking.js"></script>
+<script src="/shared/cookie-modal.js"></script>
+<script type="module" src="../../shared/authNav.js"></script>
+<script type="module">
+    import { onAuthChange, getProfile, updateProfile, signOut } from '../../shared/auth.js';
+    import { isSupabaseConfigured } from '../../shared/supabaseClient.js';
+    import { getMyScores, sumTotalPoints } from '../../shared/points.js';
+    import { AVATAR_BASES, AVATAR_COLORS, avatarMarkup, avatarIconMarkup } from '../../shared/avatar.js';
+
+    const notConfiguredEl = document.getElementById('not-configured');
+    const signedOutEl = document.getElementById('signed-out');
+    const contentEl = document.getElementById('profile-content');
+
+    if (!isSupabaseConfigured) {
+        notConfiguredEl.classList.remove('hidden');
+    } else {
+        onAuthChange(async (user) => {
+            if (!user) {
+                signedOutEl.classList.remove('hidden');
+                contentEl.classList.add('hidden');
+                return;
+            }
+            signedOutEl.classList.add('hidden');
+            contentEl.classList.remove('hidden');
+            await loadProfile(user);
+        });
+    }
+
+    let currentUser = null;
+    let currentProfile = null;
+
+    async function loadProfile(user) {
+        currentUser = user;
+        currentProfile = await getProfile(user.id);
+        renderHeader();
+        await renderScores();
+    }
+
+    function renderHeader() {
+        document.getElementById('avatar-slot').innerHTML =
+            avatarMarkup(currentProfile.avatar_base, currentProfile.avatar_color, 72);
+        document.getElementById('display-name-text').textContent = currentProfile.display_name;
+        const created = new Date(currentProfile.created_at);
+        document.getElementById('member-since').textContent =
+            'Medlem siden ' + created.toLocaleDateString('no-NO', { year: 'numeric', month: 'long' });
+    }
+
+    async function renderScores() {
+        const scores = await getMyScores(currentUser.id);
+        document.getElementById('total-points-value').textContent = sumTotalPoints(scores);
+
+        const grid = document.getElementById('games-grid');
+        grid.innerHTML = scores.map((s) => `
+            <div class="game-card">
+                <h3>${escapeHtml(s.displayName)}</h3>
+                <div class="stat-row"><span>Highscore</span><strong>${s.highscore}</strong></div>
+                <div class="stat-row"><span>Totale poeng</span><strong>${s.totalPoints}</strong></div>
+                <div class="stat-row"><span>Runder spilt</span><strong>${s.roundsPlayed}</strong></div>
+            </div>
+        `).join('');
+    }
+
+    function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    // ── Rediger visningsnavn ──────────────────────────────────────────
+    document.getElementById('edit-name-btn').addEventListener('click', async () => {
+        const next = window.prompt('Nytt visningsnavn:', currentProfile.display_name);
+        if (!next || !next.trim() || next.trim() === currentProfile.display_name) return;
+        const name = next.trim().slice(0, 40);
+        await updateProfile(currentUser.id, { display_name: name });
+        currentProfile.display_name = name;
+        renderHeader();
+    });
+
+    // ── Logg ut ───────────────────────────────────────────────────────
+    document.getElementById('signout-btn').addEventListener('click', async () => {
+        await signOut();
+        window.location.href = 'logg-inn.html';
+    });
+
+    // ── Rediger avatar-modal ──────────────────────────────────────────
+    const backdrop = document.getElementById('avatar-modal-backdrop');
+    const baseGrid = document.getElementById('base-grid');
+    const colorGrid = document.getElementById('color-grid');
+    let pendingBase = null;
+    let pendingColor = null;
+
+    function openAvatarModal() {
+        pendingBase = currentProfile.avatar_base;
+        pendingColor = currentProfile.avatar_color;
+
+        baseGrid.innerHTML = AVATAR_BASES.map((base) => `
+            <button type="button" class="base-option" data-base="${base}" title="${base}">
+                <svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="32" fill="#2e3047"></circle>
+                <g style="color:#fff">${avatarIconMarkup(base)}</g></svg>
+            </button>
+        `).join('');
+
+        colorGrid.innerHTML = AVATAR_COLORS.map((color) => `
+            <button type="button" class="color-option" data-color="${color}" style="background:${color}"></button>
+        `).join('');
+
+        updateSelection();
+        backdrop.classList.remove('hidden');
+    }
+
+    function updateSelection() {
+        baseGrid.querySelectorAll('.base-option').forEach((el) => {
+            el.classList.toggle('selected', el.dataset.base === pendingBase);
+        });
+        colorGrid.querySelectorAll('.color-option').forEach((el) => {
+            el.classList.toggle('selected', el.dataset.color === pendingColor);
+        });
+    }
+
+    baseGrid.addEventListener('click', (e) => {
+        const btn = e.target.closest('.base-option');
+        if (!btn) return;
+        pendingBase = btn.dataset.base;
+        updateSelection();
+    });
+
+    colorGrid.addEventListener('click', (e) => {
+        const btn = e.target.closest('.color-option');
+        if (!btn) return;
+        pendingColor = btn.dataset.color;
+        updateSelection();
+    });
+
+    document.getElementById('edit-avatar-btn').addEventListener('click', openAvatarModal);
+    document.getElementById('avatar-cancel-btn').addEventListener('click', () => backdrop.classList.add('hidden'));
+    backdrop.addEventListener('click', (e) => { if (e.target === backdrop) backdrop.classList.add('hidden'); });
+
+    document.getElementById('avatar-save-btn').addEventListener('click', async () => {
+        await updateProfile(currentUser.id, { avatar_base: pendingBase, avatar_color: pendingColor });
+        currentProfile.avatar_base = pendingBase;
+        currentProfile.avatar_color = pendingColor;
+        renderHeader();
+        backdrop.classList.add('hidden');
+    });
+</script>
+
+</body>
+</html>
