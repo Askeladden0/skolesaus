@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minesweeper Classic</title>
+    <title>Minesweeper – Skolesaus</title>
+    <link rel="icon" type="image/x-icon" href="/images/logo3.png">
     <style>
         :root {
             --bg-color: #f0f0f0;
@@ -21,20 +22,6 @@
             flex-direction: column;
             align-items: center;
         }
-
-        /* Toppmeny */
-        nav {
-            width: 100%;
-            background-color: #222;
-            padding: 15px 0;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            color: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
-        }
-
-        nav a { color: #00ff00; text-decoration: none; font-weight: bold; }
 
         /* Hovedlayout */
         .container {
@@ -127,11 +114,6 @@
 </head>
 <body oncontextmenu="return false;">
 
-    <nav>
-        <div style="font-size: 20px; letter-spacing: 2px;">MINESWEEPER PRO</div>
-        <a href="#">Hjemmeside</a>
-    </nav>
-
     <div class="container">
         <div class="ad-placeholder">Google Ads<br>(160x600)</div>
 
@@ -155,8 +137,8 @@
 
             <div class="description">
                 <h3>Om Minesweeper</h3>
-                <p>Målet med spillet er å avdekke alle rutene som ikke inneholder miner. 
-                   Venstreklikk for å åpne en rute, høyreklikk for å sette et flagg 🚩. 
+                <p>Målet med spillet er å avdekke alle rutene som ikke inneholder miner.
+                   Venstreklikk for å åpne en rute, høyreklikk for å sette et flagg 🚩.
                    Tallene forteller deg hvor mange miner som finnes i de åtte nabofeltene.</p>
             </div>
         </div>
@@ -179,7 +161,7 @@
             rows = config[diff].r;
             cols = config[diff].c;
             minesCount = config[diff].m;
-            
+
             resetStats();
             createBoard();
             renderBoard();
@@ -269,11 +251,11 @@
 
         function handleRightClick(r, c) {
             if (gameOver || board[r][c].isRevealed) return;
-            
+
             board[r][c].isFlagged = !board[r][c].isFlagged;
             const cellEl = document.getElementById(`cell-${r}-${c}`);
             cellEl.classList.toggle('flagged');
-            
+
             flags += board[r][c].isFlagged ? 1 : -1;
             document.getElementById('mine-count').innerText = (minesCount - flags).toString().padStart(3, '0');
         }
@@ -331,5 +313,9 @@
         // Start spillet ved innlasting
         initGame();
     </script>
+
+    <script src="/shared/nav.js"></script>
+    <script src="/shared/tracking.js"></script>
+    <script src="/shared/cookie-modal.js"></script>
 </body>
 </html>
