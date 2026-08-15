@@ -1,7 +1,10 @@
 # Skolesaus – strukturplan
 
-> Ren gjennomgang og planlegging. Ingen kode er endret, ingen filer er flyttet eller slettet.
-> Dette dokumentet er grunnlaget for en fremtidig, trinnvis migrering.
+> **Status: Implementert.** Strukturen beskrevet under (punkt 4) er gjennomført i denne
+> branchen. Punkt 6 og 7 (innlogging, poeng/rabatt) er fortsatt kun forberedt konseptuelt —
+> selve funksjonaliteten er ikke bygget. Se commit-historikken for detaljer om utførelsen,
+> inkludert et par funn underveis (blockerino/subak-game var git-submodule-pekere, ikke tomme
+> mapper; tre av "de duplike dokumentene" var faktisk lenket som nedlastinger og ble beholdt).
 
 ## Innhold
 
