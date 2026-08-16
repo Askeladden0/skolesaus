@@ -125,8 +125,13 @@
             align-items: center;
             justify-content: center;
             gap: 0.6rem;
-            cursor: not-allowed;
+            cursor: pointer;
+            transition: border-color .15s, color .15s;
         }
+
+        .google-btn:hover { border-color: var(--accent); color: var(--text); }
+        .google-btn:disabled { cursor: not-allowed; opacity: 0.6; }
+        .google-btn:disabled:hover { border-color: var(--border); color: var(--muted); }
 
         .msg {
             font-size: 0.82rem;
@@ -184,8 +189,8 @@
         </form>
 
         <div class="divider">eller</div>
-        <button type="button" class="google-btn" disabled title="Google-innlogging kommer snart">
-            <i class="fa-brands fa-google"></i> Logg inn med Google (kommer snart)
+        <button type="button" class="google-btn" id="google-btn">
+            <i class="fa-brands fa-google"></i> Logg inn med Google
         </button>
     </div>
 </main>
@@ -195,7 +200,7 @@
 <script src="/shared/cookie-modal.js"></script>
 <script type="module" src="../../shared/authNav.js"></script>
 <script type="module">
-    import { signInWithEmail, signUpWithEmail, onAuthChange, AuthNotConfiguredError } from '../../shared/auth.js';
+    import { signInWithEmail, signUpWithEmail, signInWithGoogle, onAuthChange, AuthNotConfiguredError } from '../../shared/auth.js';
     import { isSupabaseConfigured } from '../../shared/supabaseClient.js';
 
     const configMsg = document.getElementById('config-msg');
@@ -204,6 +209,7 @@
     const tabSignup = document.getElementById('tab-signup');
     const signinForm = document.getElementById('signin-form');
     const signupForm = document.getElementById('signup-form');
+    const googleBtn = document.getElementById('google-btn');
 
     if (!isSupabaseConfigured) {
         configMsg.textContent = 'Innlogging er ikke satt opp ennå på denne siden. Se SUPABASE_SETUP.md.';
@@ -270,6 +276,18 @@
             showMsg(friendlyError(err), 'error');
         } finally {
             submitBtn.disabled = false;
+        }
+    });
+
+    googleBtn.addEventListener('click', async () => {
+        googleBtn.disabled = true;
+        try {
+            // Supabase tar over og sender nettleseren til Google, deretter
+            // tilbake til profil.html — ingen manuell redirect nødvendig her.
+            await signInWithGoogle();
+        } catch (err) {
+            showMsg(friendlyError(err), 'error');
+            googleBtn.disabled = false;
         }
     });
 

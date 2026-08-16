@@ -58,12 +58,17 @@ og innloggings-/profilsidene viser en forklarende melding istedenfor å krasje.
 
 ## 6. (Fase 2) Slå på Google-innlogging
 
+"Logg inn med Google"-knappen på `logg-inn.html` er koblet til `signInWithGoogle()` og klikkbar —
+den venter kun på at Google-provideren aktiveres i Supabase-prosjektet:
+
 1. **Authentication → Providers → Google** i Supabase → aktiver, og følg Supabase sin veiledning
    for å opprette OAuth-klient i Google Cloud Console (klient-ID + hemmelighet limes inn i
    Supabase).
-2. I `src/pages/logg-inn/index.html`: fjern `disabled`-attributtet fra Google-knappen og koble den
-   til `signInWithGoogle()` fra `src/shared/auth.js` (funksjonen finnes allerede — den kaller
-   Supabase sin `signInWithOAuth`).
+2. Under **Authentication → URL Configuration** i Supabase, sjekk at `https://skolesaus.no` (og
+   `http://localhost:5173` for lokal testing) står under **Redirect URLs**, ellers avviser Supabase
+   redirecten tilbake fra Google.
+3. Ingen kodeendring nødvendig — inntil provideren er aktivert viser knappen bare en feilmelding
+   fra Supabase (f.eks. "Unsupported provider") hvis noen klikker på den.
 
 ## 7. Verifiser at alt fungerer
 
