@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, follow">
+    <title>Logg inn – Skolesaus</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="/images/logo3.png">
+    <link rel="stylesheet" href="../../shared/tokens.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--bg); color: var(--text); font-family: var(--font-body); min-height: 100vh; }
+
+        main {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6rem 5% 3rem;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 400px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 2rem 1.8rem;
+        }
+
+        .auth-card h1 {
+            font-size: 1.5rem;
+            letter-spacing: -0.3px;
+            margin-bottom: 1.4rem;
+            text-align: center;
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: 0.4rem;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 4px;
+            margin-bottom: 1.4rem;
+        }
+
+        .auth-tabs button {
+            flex: 1;
+            padding: 0.55rem 0;
+            font-size: 0.85rem;
+            font-weight: 700;
+            background: transparent;
+            color: var(--muted);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background .15s, color .15s;
+        }
+
+        .auth-tabs button.active { background: var(--accent); color: #0b0b0b; }
+
+        form { display: flex; flex-direction: column; gap: 0.9rem; }
+        form.hidden { display: none; }
+
+        label { font-size: 0.78rem; color: var(--muted); margin-bottom: 0.3rem; display: block; }
+
+        input {
+            width: 100%;
+            padding: 0.7rem 0.85rem;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text);
+            font-size: 0.9rem;
+            font-family: inherit;
+        }
+
+        input:focus { outline: none; border-color: var(--accent); }
+
+        .submit-btn {
+            margin-top: 0.4rem;
+            padding: 0.8rem;
+            background: var(--accent);
+            color: #0b0b0b;
+            border: none;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.92rem;
+            cursor: pointer;
+            transition: opacity .15s;
+        }
+
+        .submit-btn:disabled { opacity: 0.6; cursor: default; }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            margin: 1.2rem 0;
+            color: var(--muted);
+            font-size: 0.75rem;
+        }
+
+        .divider::before, .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .google-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--muted);
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            cursor: not-allowed;
+        }
+
+        .msg {
+            font-size: 0.82rem;
+            padding: 0.6rem 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .msg.error { display: block; background: rgba(214,48,49,0.12); color: #ff8b8b; border: 1px solid rgba(214,48,49,0.3); }
+        .msg.success { display: block; background: rgba(67,212,178,0.1); color: var(--accent); border: 1px solid rgba(67,212,178,0.3); }
+        .msg.info { display: block; background: rgba(253,203,110,0.1); color: #fdcb6e; border: 1px solid rgba(253,203,110,0.3); }
+    </style>
+</head>
+<body>
+
+<main>
+    <div class="auth-card">
+        <h1>Velkommen til <span style="color: var(--accent)">Skolesaus</span></h1>
+
+        <div id="config-msg" class="msg info"></div>
+        <div id="form-msg" class="msg"></div>
+
+        <div class="auth-tabs">
+            <button type="button" id="tab-signin" class="active">Logg inn</button>
+            <button type="button" id="tab-signup">Registrer deg</button>
+        </div>
+
+        <form id="signin-form">
+            <div>
+                <label for="signin-email">E-post</label>
+                <input type="email" id="signin-email" required autocomplete="email">
+            </div>
+            <div>
+                <label for="signin-password">Passord</label>
+                <input type="password" id="signin-password" required autocomplete="current-password">
+            </div>
+            <button type="submit" class="submit-btn">Logg inn</button>
+        </form>
+
+        <form id="signup-form" class="hidden">
+            <div>
+                <label for="signup-name">Visningsnavn</label>
+                <input type="text" id="signup-name" required maxlength="40" autocomplete="nickname">
+            </div>
+            <div>
+                <label for="signup-email">E-post</label>
+                <input type="email" id="signup-email" required autocomplete="email">
+            </div>
+            <div>
+                <label for="signup-password">Passord (minst 6 tegn)</label>
+                <input type="password" id="signup-password" required minlength="6" autocomplete="new-password">
+            </div>
+            <button type="submit" class="submit-btn">Opprett konto</button>
+        </form>
+
+        <div class="divider">eller</div>
+        <button type="button" class="google-btn" disabled title="Google-innlogging kommer snart">
+            <i class="fa-brands fa-google"></i> Logg inn med Google (kommer snart)
+        </button>
+    </div>
+</main>
+
+<script src="/shared/nav.js"></script>
+<script src="/shared/tracking.js"></script>
+<script src="/shared/cookie-modal.js"></script>
+<script type="module" src="../../shared/authNav.js"></script>
+<script type="module">
+    import { signInWithEmail, signUpWithEmail, onAuthChange, AuthNotConfiguredError } from '../../shared/auth.js';
+    import { isSupabaseConfigured } from '../../shared/supabaseClient.js';
+
+    const configMsg = document.getElementById('config-msg');
+    const formMsg = document.getElementById('form-msg');
+    const tabSignin = document.getElementById('tab-signin');
+    const tabSignup = document.getElementById('tab-signup');
+    const signinForm = document.getElementById('signin-form');
+    const signupForm = document.getElementById('signup-form');
+
+    if (!isSupabaseConfigured) {
+        configMsg.textContent = 'Innlogging er ikke satt opp ennå på denne siden. Se SUPABASE_SETUP.md.';
+        configMsg.classList.add('info');
+    }
+
+    tabSignin.addEventListener('click', () => {
+        tabSignin.classList.add('active');
+        tabSignup.classList.remove('active');
+        signinForm.classList.remove('hidden');
+        signupForm.classList.add('hidden');
+        formMsg.className = 'msg';
+    });
+
+    tabSignup.addEventListener('click', () => {
+        tabSignup.classList.add('active');
+        tabSignin.classList.remove('active');
+        signupForm.classList.remove('hidden');
+        signinForm.classList.add('hidden');
+        formMsg.className = 'msg';
+    });
+
+    function showMsg(text, type) {
+        formMsg.textContent = text;
+        formMsg.className = 'msg ' + type;
+    }
+
+    function friendlyError(err) {
+        if (err instanceof AuthNotConfiguredError) return err.message;
+        return err.message || 'Noe gikk galt. Prøv igjen.';
+    }
+
+    signinForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const submitBtn = signinForm.querySelector('.submit-btn');
+        submitBtn.disabled = true;
+        try {
+            await signInWithEmail(
+                document.getElementById('signin-email').value.trim(),
+                document.getElementById('signin-password').value,
+            );
+            showMsg('Innlogget! Sender deg videre …', 'success');
+            window.location.href = 'profil.html';
+        } catch (err) {
+            showMsg(friendlyError(err), 'error');
+        } finally {
+            submitBtn.disabled = false;
+        }
+    });
+
+    signupForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const submitBtn = signupForm.querySelector('.submit-btn');
+        submitBtn.disabled = true;
+        try {
+            await signUpWithEmail(
+                document.getElementById('signup-email').value.trim(),
+                document.getElementById('signup-password').value,
+                document.getElementById('signup-name').value.trim(),
+            );
+            showMsg('Konto opprettet! Sjekk e-posten din for å bekrefte kontoen, logg deretter inn.', 'success');
+            tabSignin.click();
+        } catch (err) {
+            showMsg(friendlyError(err), 'error');
+        } finally {
+            submitBtn.disabled = false;
+        }
+    });
+
+    // Allerede innlogget? Send rett til profilen.
+    onAuthChange((user) => {
+        if (user) window.location.href = 'profil.html';
+    });
+</script>
+
+</body>
+</html>

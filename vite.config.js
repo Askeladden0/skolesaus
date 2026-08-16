@@ -18,6 +18,8 @@ const PAGES = {
   'norsk-mal': 'norsk_mal.html',
   'p-matte-snarveier': 'p_matte_snarveier.html',
   personvern: 'personvern.html',
+  'logg-inn': 'logg-inn.html',
+  profil: 'profil.html',
 };
 
 export default defineConfig({

@@ -83,6 +83,11 @@
         '    color: #afafaf;',
         '}',
         '#ss-nav .ss-nav-made-by strong { color: #fcf9f9; }',
+        '#ss-nav-account-slot { display: flex; align-items: center; gap: 0.5rem; margin-left: 0.8rem; }',
+        '#ss-nav-account-slot a { font-size: 0.82rem; font-weight: 700; color: #d6d5d5; padding: 0.4rem 0.85rem; border-radius: 4px; border: 1px solid #2a2a2a; transition: color 0.15s, border-color 0.15s; white-space: nowrap; }',
+        '#ss-nav-account-slot a:hover { color: #43d4b2; border-color: rgba(67,212,178,0.35); }',
+        '#ss-nav-account-slot .ss-nav-avatar-link { display: flex; align-items: center; gap: 0.5rem; border: none; padding: 0.2rem; }',
+        '#ss-nav-account-slot .ss-nav-avatar-link img, #ss-nav-account-slot .ss-nav-avatar-link svg { width: 28px; height: 28px; border-radius: 50%; display: block; }',
         '@media (max-width: 768px) {',
         '    #ss-nav .ss-nav-made-by { display: none; }',
         '    #ss-nav .ss-nav-logo { font-size: 1.4rem; }',
@@ -111,6 +116,7 @@
         '<div class="ss-nav-right">' +
             '<ul class="ss-nav-links">' + linksHTML + '</ul>' +
             '<span class="ss-nav-made-by">Laget av <a href="https://www.tiktok.com/@snorre.saus" style="color: #43d4b2; text-decoration: underline;"><strong>Snorre Saus</strong></a></span><i class="fa-brands fa-tiktok"></i>' +
+            '<div id="ss-nav-account-slot" aria-live="polite"></div>' +
         '</div>' +
         '</nav>';
 

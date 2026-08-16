@@ -223,9 +223,11 @@
 <script src="/shared/nav.js"></script>
 <script src="/shared/tracking.js"></script>
 <script src="/shared/cookie-modal.js"></script>
+<script type="module" src="../../shared/authNav.js"></script>
 <script type="module">
   // FIX 1: Correct CDN URL for Rapier2D
   import * as RAPIER from 'https://cdn.jsdelivr.net/npm/@dimforge/rapier2d-compat@0.16.1/rapier.es.js';
+  import { reportRound } from '../../shared/points.js';
   await RAPIER.init();
 
   const CANVAS_W = 410, CANVAS_H = 560;
@@ -573,6 +575,7 @@
     finalScoreEl.textContent = score;
     overlay.style.display = 'flex';
     dropIndicatorDiv.style.display = 'none';
+    reportRound('fruktspleis', score);
   }
 
   function updateScore(add) {

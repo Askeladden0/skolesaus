@@ -225,6 +225,11 @@
 <script src="/shared/nav.js"></script>
 <script src="/shared/tracking.js"></script>
 <script src="/shared/cookie-modal.js"></script>
+<script type="module" src="../../shared/authNav.js"></script>
+    <script type="module">
+        import { reportRound } from '../../shared/points.js';
+        window.SkolesausPoints = { reportRound };
+    </script>
     <script>
         let board = [];
         let score = 0;
@@ -328,6 +333,7 @@
                 finalScoreElement.innerText = score;
                 activityOverOverlay.classList.add('show');
                 saveactivityState();
+                window.SkolesausPoints && window.SkolesausPoints.reportRound('tallkombo', score);
             }, 150);
         }
 
